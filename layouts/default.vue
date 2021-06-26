@@ -6,7 +6,7 @@
       :can-cancel="true"
     ></b-loading>
     <section class="main-content">
-      <navbar v-if="$route.name !== 'Camera'" />
+      <navbar v-if="$route.name !== 'new'" />
       <div>
         <nuxt />
       </div>

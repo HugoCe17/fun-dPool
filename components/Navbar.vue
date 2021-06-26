@@ -16,7 +16,7 @@
               title: $device.isDesktop,
             },
           "
-          >Shard NFTs</label
+          >fun-dpool</label
         >
       </b-navbar-item>
     </template>
@@ -50,7 +50,7 @@
           v-if="selectedAccount"
           class="is-primary mx-1"
           tag="nuxt-link"
-          to="/Camera"
+          to="/app"
         >
           <strong>App</strong>
         </b-button>
