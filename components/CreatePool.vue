@@ -45,9 +45,7 @@
         label="Fund Booster"
         icon="account-plus"
       >
-        <h1>
-          Launch your NFT raise
-        </h1>
+        <h1>Launch your NFT raise</h1>
         <b-button @click.native="launchPool">Launch fun-DPool</b-button>
       </b-step-item>
     </b-steps>
@@ -56,7 +54,6 @@
 
 <script>
 export default {
-  mounted() {},
   data() {
     return {
       stepLocation: 5,
@@ -68,12 +65,13 @@ export default {
       newPoolSpan: 0,
     }
   },
+  mounted() {},
   methods: {
     startProject() {
       this.isStartingProject = true
     },
     launchPool() {
-      let {
+      const {
         newPoolName,
         newPoolDesc,
         newPoolFile,
@@ -84,12 +82,14 @@ export default {
       fetch(this.file)
         .then((res) => res.blob())
         .then(async (blob) => {
-          const file = new this.$nftStorageFile([blob], 'nftdata.png', {
-            type: 'image/png',
+          const file = new this.$nftStorageFile([blob], 'nftdata.jpg', {
+            type: 'image/jpg',
           })
           console.log(file)
           await this.sendToNftStorage(file)
         })
+        .catch((error) => console.error(error))
+
       let metadata = {}
       console.log({
         newPoolName,
@@ -101,12 +101,22 @@ export default {
     },
     async sendToNftStorage(image) {
       const today = new Date()
-      const metadata = await this.$nftStorageClient.store({
-        name: today.toLocaleDateString('en-US'), // 9/17/2016
-        description: String(today),
-        image,
-      })
-      console.log(metadata)
+      try {
+        const metadata = await this.$nftStorageClient
+          .store({
+            name: today.toLocaleDateString('en-US'), // 9/17/2016
+            description: String(today),
+            image,
+          })
+          .then((res) => {
+            console.log('SEND_TO_NFT_STORAGE_RES: ', res)
+            return res
+          })
+          .catch((error) => console.error(error))
+        console.log(metadata)
+      } catch (error) {
+        console.error(error)
+      }
     },
   },
 }
