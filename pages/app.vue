@@ -1,6 +1,6 @@
 <template>
   <section>
-    <b-button @click.native="startPool" id="btn"
+    <b-button id="btn" @click.native="startPool"
       ><h1>Start A Project</h1></b-button
     >
   </section>
@@ -12,7 +12,7 @@ import momintABI from '~/contracts/ABI/ERC721.json'
 import { DUMMYCONTRACT_ADDRESS } from '~/constants'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {},
   computed: {
     ...mapState(['selectedAccount', 'chainId']),

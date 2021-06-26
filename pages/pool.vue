@@ -60,13 +60,11 @@ import momintABI from '~/contracts/ABI/ERC721.json'
 import { DUMMYCONTRACT_ADDRESS } from '~/constants'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {},
-  computed: {
-    ...mapState(['selectedAccount', 'chainId']),
-  },
   data() {
     return {
+      momint: null,
       poolName: 'Cryptopunk #9442',
       poolAmount: 100000,
       poolGoal: 350000,
@@ -77,6 +75,9 @@ export default {
       poolDescription:
         'Cryptopunks is an NFT project released on the Ethereum blockchain by Larva Labs, and consists of 10,000 unique pixelated characters. Some are human, some aliens, some zombies and some apes.',
     }
+  },
+  computed: {
+    ...mapState(['selectedAccount', 'chainId']),
   },
   mounted() {
     this.momint = new this.$web3.eth.Contract(momintABI, DUMMYCONTRACT_ADDRESS)

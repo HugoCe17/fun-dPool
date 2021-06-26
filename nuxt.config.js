@@ -7,7 +7,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'shard-nfts',
+    title: 'Fun dPool',
     htmlAttrs: {
       lang: 'en',
     },
@@ -62,8 +62,8 @@ export default {
   // https://pwa.nuxtjs.org/
   pwa: {
     manifest: {
-      name: 'Shard NFTs',
-      short_name: 'Shardy',
+      name: 'Fun dPool',
+      short_name: 'fpd',
     },
     meta: {
       mobileAppIOS: true,
