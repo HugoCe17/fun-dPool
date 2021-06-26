@@ -22,7 +22,16 @@
         icon="account-plus"
       >
         <h1>Upload an Image for your project.</h1>
-        <b-input v-model="newPoolFile" type="file"></b-input>
+        <b-upload v-model="newPoolFile" drag-drop>
+          <section class="section">
+            <div class="content has-text-centered">
+              <p>
+                <b-icon icon="upload" size="is-large"> </b-icon>
+              </p>
+              <p>Drop your files here or click to upload</p>
+            </div>
+          </section>
+        </b-upload>
       </b-step-item>
       <b-step-item
         headerClass="has-text-black"
@@ -63,7 +72,7 @@ export default {
       isStartingProject: false,
       newPoolName: '',
       newPoolDesc: '',
-      newPoolFile: '',
+      newPoolFile: null,
       newPoolGoal: 100,
       newPoolSpan: 0,
     }
@@ -72,7 +81,7 @@ export default {
     startProject() {
       this.isStartingProject = true
     },
-    launchPool() {
+    async launchPool() {
       let {
         newPoolName,
         newPoolDesc,
@@ -81,15 +90,7 @@ export default {
         newPoolSpan,
       } = this
 
-      fetch(this.file)
-        .then((res) => res.blob())
-        .then(async (blob) => {
-          const file = new this.$nftStorageFile([blob], 'nftdata.png', {
-            type: 'image/png',
-          })
-          console.log(file)
-          await this.sendToNftStorage(file)
-        })
+      await this.sendToNftStorage(newPoolFile)
       let metadata = {}
       console.log({
         newPoolName,
@@ -100,13 +101,15 @@ export default {
       })
     },
     async sendToNftStorage(image) {
-      const today = new Date()
-      const metadata = await this.$nftStorageClient.store({
-        name: today.toLocaleDateString('en-US'), // 9/17/2016
-        description: String(today),
-        image,
-      })
-      console.log(metadata)
+      console.log(image, 'being uploaded')
+      if (image) {
+        const metadata = await this.$nftStorageClient.store({
+          name: this.newPoolName,
+          description: this.newPoolDesc,
+          image: image,
+        })
+        console.log(metadata)
+      }
     },
   },
 }

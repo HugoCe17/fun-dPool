@@ -60,15 +60,15 @@ export default {
   },
 
   // https://pwa.nuxtjs.org/
-  pwa: {
-    manifest: {
-      name: 'Fun dPool',
-      short_name: 'fpd',
-    },
-    meta: {
-      mobileAppIOS: true,
-      appleStatusBarStyle: 'black-translucent',
-      nativeUI: true,
-    },
-  },
+  // pwa: {
+  //   manifest: {
+  //     name: 'Fun dPool',
+  //     short_name: 'fpd',
+  //   },
+  //   meta: {
+  //     mobileAppIOS: true,
+  //     appleStatusBarStyle: 'black-translucent',
+  //     nativeUI: true,
+  //   },
+  // },
 }
