@@ -4,7 +4,7 @@
       <div class="hero-body">
         <div class="columns holder">
           <div class="column is-three-quarters">
-            <p class="title is-size-1 has-text-weight-bold">Shard NFTs</p>
+            <p class="title is-size-1 has-text-weight-bold">Fun dPool</p>
             <!-- <p class="subtitle is-italic has-text-weight-light">
               Fractionalized NFTs.
             </p> -->
@@ -25,7 +25,7 @@
 <script>
 export default {
   mounted() {
-    const delay = 130
+    // const delay = 130
     new this.$typeit(this.$refs.typeEffect, {
       speed: 90,
       startDelay: 1000,
