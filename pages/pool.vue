@@ -68,11 +68,11 @@ export default {
   data() {
     return {
       poolName: 'Cryptopunk #9442',
-      poolAmount: 300000,
+      poolAmount: 100000,
       poolGoal: 350000,
       poolBackers: 420,
       poolDaysLeft: 5,
-      poolAPY: 80000,
+      poolAPY: 800000,
       poolCreator: '0xDE29485dF7e941866442ceb25DCe1b9c64D02A26',
       poolDescription:
         'Cryptopunks is an NFT project released on the Ethereum blockchain by Larva Labs, and consists of 10,000 unique pixelated characters. Some are human, some aliens, some zombies and some apes.',
@@ -84,6 +84,7 @@ export default {
       this.poolAmount =
         this.poolAmount +
         (this.poolAmount * (this.poolAPY / 100)) / 365 / 24 / 60 / 60
+      this.poolBackers++
     }, 1000)
   },
   methods: {
