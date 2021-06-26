@@ -83,11 +83,15 @@ export const actions: ActionTree<RootState, RootState> = {
 
   async connectToWallet({ commit, dispatch, state }) {
     commit('setLoadingStatus', true)
-    if (state.chainId > -1 && Number(state.chainId) !== 4) {
+    if (
+      state.chainId > -1 &&
+      Number(state.chainId) !== 4 &&
+      Number(state.chainId) !== 42
+    ) {
       commit('setLoadingStatus', false)
       return Snackbar.open({
         actionText: 'OK',
-        message: 'Please connect to Rinkeby',
+        message: 'Please connect to Rinkeby or Kovan',
         type: 'is-warning',
         position: 'is-top',
         duration: 10000,
