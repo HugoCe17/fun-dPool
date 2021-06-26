@@ -1,4 +1,4 @@
-# Shard NFTs
+# Fun dPool
 
 ## Build Setup
 
