@@ -1,8 +1,6 @@
 <template>
   <section>
-    <b-button @click.native="startPool" id="btn"
-      ><h1>Start A Project</h1></b-button
-    >
+    <create-pool />
   </section>
 </template>
 
@@ -10,10 +8,13 @@
 import { mapState } from 'vuex'
 import momintABI from '~/contracts/ABI/ERC721.json'
 import { DUMMYCONTRACT_ADDRESS } from '~/constants'
+import CreatePool from '~/components/CreatePool.vue'
 
 export default {
   name: 'app',
-  components: {},
+  components: {
+    CreatePool,
+  },
   computed: {
     ...mapState(['selectedAccount', 'chainId']),
   },
