@@ -1,41 +1,36 @@
 <template>
   <section>
     <create-pool />
+    <pools />
   </section>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import momintABI from '~/contracts/ABI/ERC721.json'
-import { DUMMYCONTRACT_ADDRESS } from '~/constants'
 import CreatePool from '~/components/CreatePool.vue'
+import Pools from '~/components/Pools.vue'
 
 export default {
   name: 'app',
   components: {
     CreatePool,
+    Pools,
   },
   computed: {
     ...mapState(['selectedAccount', 'chainId']),
   },
-  mounted() {
-    this.momint = new this.$web3.eth.Contract(momintABI, DUMMYCONTRACT_ADDRESS)
-  },
-  methods: {
-    startPool() {
-      console.log(this.momint)
-    },
-  },
+  mounted() {},
+  methods: {},
 }
 </script>
 
 <style scoped>
-section {
+/* section {
   height: 90vh;
   display: flex;
   justify-content: center;
   align-content: center;
   flex-direction: column;
   margin: 0;
-}
+} */
 </style>

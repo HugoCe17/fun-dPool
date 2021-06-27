@@ -22,7 +22,16 @@
         icon="account-plus"
       >
         <h1>Upload an Image for your project.</h1>
-        <b-input v-model="newPoolFile" type="file"></b-input>
+        <b-upload v-model="newPoolFile" drag-drop>
+          <section class="section">
+            <div class="content has-text-centered">
+              <p>
+                <b-icon icon="upload" size="is-large"> </b-icon>
+              </p>
+              <p>Drop your files here or click to upload</p>
+            </div>
+          </section>
+        </b-upload>
       </b-step-item>
       <b-step-item
         headerClass="has-text-black"
@@ -47,30 +56,46 @@
       >
         <h1>Launch your NFT raise</h1>
         <b-button @click.native="launchPool">Launch fun-DPool</b-button>
+        <b-button @click.native="getPools">View fun-DPool</b-button>
       </b-step-item>
     </b-steps>
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
+import fundPoolABI from '~/contracts/ABI/NFTShardFactory.json'
+import { KOVAN_NFTSHARDFACTORY } from '~/constants'
+
 export default {
   data() {
     return {
-      stepLocation: 5,
+      fundPool: null,
+      stepLocation: 0,
       isStartingProject: false,
       newPoolName: '',
       newPoolDesc: '',
-      newPoolFile: '',
+      newPoolFile: null,
       newPoolGoal: 100,
       newPoolSpan: 0,
     }
   },
-  mounted() {},
+  computed: {
+    ...mapState(['selectedAccount']),
+  },
+  mounted() {
+    this.fundPool = new this.$web3.eth.Contract(
+      fundPoolABI.abi,
+      KOVAN_NFTSHARDFACTORY
+    )
+  },
   methods: {
     startProject() {
       this.isStartingProject = true
+      console.log(this.fundPool)
     },
-    launchPool() {
+    async launchPool() {
       const {
         newPoolName,
         newPoolDesc,
@@ -79,44 +104,64 @@ export default {
         newPoolSpan,
       } = this
 
-      fetch(this.file)
-        .then((res) => res.blob())
-        .then(async (blob) => {
-          const file = new this.$nftStorageFile([blob], 'nftdata.jpg', {
-            type: 'image/jpg',
-          })
-          console.log(file)
-          await this.sendToNftStorage(file)
-        })
-        .catch((error) => console.error(error))
-
-      let metadata = {}
-      console.log({
+      const formData = {
         newPoolName,
         newPoolDesc,
         newPoolFile,
         newPoolGoal,
         newPoolSpan,
-      })
-    },
-    async sendToNftStorage(image) {
-      const today = new Date()
-      try {
-        const metadata = await this.$nftStorageClient
-          .store({
-            name: today.toLocaleDateString('en-US'), // 9/17/2016
-            description: String(today),
-            image,
-          })
-          .then((res) => {
-            console.log('SEND_TO_NFT_STORAGE_RES: ', res)
-            return res
-          })
-          .catch((error) => console.error(error))
-        console.log(metadata)
-      } catch (error) {
-        console.error(error)
       }
+      if (formData != null) {
+        console.log(formData)
+        await this.sendToNftStorage(formData)
+      }
+    },
+    async sendToNftStorage(formData) {
+      console.log(formData.newPoolFile, 'being uploaded')
+      if (
+        formData.newPoolFile &&
+        formData.newPoolName &&
+        formData.newPoolDesc &&
+        formData.newPoolGoal &&
+        formData.newPoolSpan
+      ) {
+        const metadata = await this.$nftStorageClient.store({
+          name: formData.newPoolName,
+          description: formData.newPoolDesc,
+          image: formData.newPoolFile,
+        })
+        console.log(metadata)
+        this.createPool(metadata)
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Something's not good, missing input fields`,
+          position: 'is-bottom',
+          type: 'is-danger',
+        })
+      }
+    },
+    createPool(metadata) {
+      this.fundPool.methods
+        .createPool(metadata.url, this.newPoolGoal, 100, this.newPoolSpan)
+        .send({ from: this.selectedAccount })
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getPools() {
+      this.fundPool.methods
+        .listPools()
+        .call()
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }

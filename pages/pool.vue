@@ -56,8 +56,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import momintABI from '~/contracts/ABI/ERC721.json'
-import { DUMMYCONTRACT_ADDRESS } from '~/constants'
 
 export default {
   name: 'App',
@@ -79,8 +77,7 @@ export default {
   computed: {
     ...mapState(['selectedAccount', 'chainId']),
   },
-  mounted() {
-    this.momint = new this.$web3.eth.Contract(momintABI, DUMMYCONTRACT_ADDRESS)
+  async mounted() {
     setInterval(() => {
       this.poolAmount =
         this.poolAmount +
@@ -89,9 +86,6 @@ export default {
     }, 1000)
   },
   methods: {
-    startPool() {
-      console.log(this.momint)
-    },
     truncateAddress(address) {
       if (address.length > 0) {
         return (
