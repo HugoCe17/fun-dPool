@@ -58,17 +58,28 @@
           Launch your NFT raise
         </h1>
         <b-button @click.native="launchPool">Launch fun-DPool</b-button>
+        <b-button @click.native="getPools">View fun-DPool</b-button>
       </b-step-item>
     </b-steps>
   </section>
 </template>
 
 <script>
+import fundPoolABI from '~/contracts/ABI/NFTShardFactory.json'
+import { KOVAN_NFTSHARDFACTORY } from '~/constants'
+
 export default {
-  mounted() {},
+  mounted() {
+    console.log(fundPoolABI)
+    this.fundPool = new this.$web3.eth.Contract(
+      fundPoolABI.abi,
+      KOVAN_NFTSHARDFACTORY
+    )
+  },
   data() {
     return {
-      stepLocation: 5,
+      fundPool: null,
+      stepLocation: 0,
       isStartingProject: false,
       newPoolName: '',
       newPoolDesc: '',
@@ -80,6 +91,7 @@ export default {
   methods: {
     startProject() {
       this.isStartingProject = true
+      console.log(this.fundPool)
     },
     async launchPool() {
       let {
@@ -90,26 +102,64 @@ export default {
         newPoolSpan,
       } = this
 
-      await this.sendToNftStorage(newPoolFile)
-      let metadata = {}
-      console.log({
+      let formData = {
         newPoolName,
         newPoolDesc,
         newPoolFile,
         newPoolGoal,
         newPoolSpan,
-      })
+      }
+      if (formData != null) {
+        console.log(formData)
+        await this.sendToNftStorage(formData)
+      }
     },
-    async sendToNftStorage(image) {
-      console.log(image, 'being uploaded')
-      if (image) {
+    async sendToNftStorage(formData) {
+      console.log(formData.newPoolFile, 'being uploaded')
+      if (
+        formData.newPoolFile &&
+        formData.newPoolName &&
+        formData.newPoolDesc &&
+        formData.newPoolGoal &&
+        formData.newPoolSpan
+      ) {
         const metadata = await this.$nftStorageClient.store({
-          name: this.newPoolName,
-          description: this.newPoolDesc,
-          image: image,
+          name: formData.newPoolName,
+          description: formData.newPoolDesc,
+          image: formData.newPoolFile,
         })
         console.log(metadata)
+        this.createPool(metadata)
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Something's not good, missing input fields`,
+          position: 'is-bottom',
+          type: 'is-danger',
+        })
       }
+    },
+    async createPool(metadata) {
+      this.fundPool.methods
+        .createPool(metadata.url, this.newPoolGoal, 100, this.newPoolSpan)
+        .send({ from: this.$web3.currentProvider.selectedAddress })
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    async getPools() {
+      this.fundPool.methods
+        .listPools()
+        .call()
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }
