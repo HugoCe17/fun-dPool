@@ -43,3 +43,8 @@ export default {
   props: ['address', 'owner', 'name', 'desc', 'image'],
 }
 </script>
+<style scoped>
+.card {
+  margin: 15px;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
-  <section class="columns">
-    <div class="column is-one-quarter" v-for="(pool, index) in pools">
+  <section>
+    <div v-for="(pool, index) in pools">
       <pool-card
         v-bind:owner="pool.owner"
         v-bind:address="pool.address"
@@ -88,5 +88,11 @@ export default {
 h1 {
   font-size: 64px;
   font-weight: 200;
+}
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
 }
 </style>
