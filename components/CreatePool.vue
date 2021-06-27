@@ -1,6 +1,6 @@
 <template>
   <section>
-    <b-button v-if="!isStartingProject" @click.native="startProject" id="btn"
+    <b-button v-if="!isStartingProject" id="btn" @click.native="startProject"
       ><h2 class="is-title">Start A Project</h2></b-button
     >
     <b-steps
@@ -8,16 +8,20 @@
       v-model="stepLocation"
       :has-navigation="true"
     >
-      <b-step-item headerClass="has-text-black" label="Name" icon="account-key">
+      <b-step-item
+        header-class="has-text-black"
+        label="Name"
+        icon="account-key"
+      >
         <h1>What's your projects name?</h1>
         <b-input v-model="newPoolName" type="text"></b-input>
       </b-step-item>
-      <b-step-item headerClass="has-text-black" label="Desc" icon="account">
+      <b-step-item header-class="has-text-black" label="Desc" icon="account">
         <h1>Tells us about your project.</h1>
         <b-input v-model="newPoolDesc" type="text"></b-input
       ></b-step-item>
       <b-step-item
-        headerClass="has-text-black"
+        header-class="has-text-black"
         label="Image"
         icon="account-plus"
       >
@@ -34,7 +38,7 @@
         </b-upload>
       </b-step-item>
       <b-step-item
-        headerClass="has-text-black"
+        header-class="has-text-black"
         label="Target Price"
         icon="account-plus"
       >
@@ -42,7 +46,7 @@
         <b-input v-model="newPoolGoal" type="number"></b-input
       ></b-step-item>
       <b-step-item
-        headerClass="has-text-black"
+        header-class="has-text-black"
         label="Funding period"
         icon="account-plus"
       >
@@ -50,7 +54,7 @@
         <b-input v-model="newPoolSpan" type="number"></b-input
       ></b-step-item>
       <b-step-item
-        headerClass="has-text-black"
+        header-class="has-text-black"
         label="Fund Booster"
         icon="account-plus"
       >
