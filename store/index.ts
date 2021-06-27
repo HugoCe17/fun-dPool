@@ -77,6 +77,7 @@ export const actions: ActionTree<RootState, RootState> = {
         return ensName.name
       }
     } catch (error) {
+      commit('setSelectedAccountEnsName', null)
       console.error('Resolving ENS name: ', Error(error).message)
     }
   },
