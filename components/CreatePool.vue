@@ -70,7 +70,6 @@ import { KOVAN_NFTSHARDFACTORY } from '~/constants'
 
 export default {
   mounted() {
-    console.log(fundPoolABI)
     this.fundPool = new this.$web3.eth.Contract(
       fundPoolABI.abi,
       KOVAN_NFTSHARDFACTORY

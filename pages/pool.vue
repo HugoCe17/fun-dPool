@@ -84,7 +84,6 @@ export default {
         (this.poolAmount * (this.poolAPY / 100)) / 365 / 24 / 60 / 60
       this.poolBackers++
     }, 1000)
-    console.log(await this.$web3.currentProvider.accounts[0])
   },
   methods: {
     truncateAddress(address) {
