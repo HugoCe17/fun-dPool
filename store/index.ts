@@ -58,15 +58,12 @@ export const actions: ActionTree<RootState, RootState> = {
       return null
     }
 
-    console.log('RESOLVE_ADDRESS: ', address)
-
     try {
       const ens = await new ENS({
         provider: await detectProvider(),
         ensAddress: getEnsAddress(4),
       })
       const ensName = await ens.getName(address)
-      console.log({ ENS: ensName })
       const checked = await ens.name(ensName.name).getAddress()
 
       if (address.toLowerCase() !== checked.toLowerCase()) {
@@ -102,7 +99,6 @@ export const actions: ActionTree<RootState, RootState> = {
 
     if (state.chainId > -1 && state.selectedAccount) {
       commit('setLoadingStatus', false)
-
       return Toast.open({
         message: `${state.selectedAccount} \n chainId: ${Number(
           state.chainId
@@ -131,7 +127,6 @@ export const actions: ActionTree<RootState, RootState> = {
       if (provider) {
         await dispatch('subscribeProvider', provider)
         await this.app.$web3.setProvider(provider)
-
         this.app.$web3.eth.extend({
           methods: [
             {
@@ -141,7 +136,6 @@ export const actions: ActionTree<RootState, RootState> = {
             },
           ],
         })
-
         const accounts = await this.app.$web3.eth.getAccounts()
         const selectedAccount = accounts[0]
         const selectedAccountEnsName = await dispatch(
@@ -150,7 +144,6 @@ export const actions: ActionTree<RootState, RootState> = {
         )
         const networkId = await this.app.$web3.eth.net.getId()
         const chainId = await this.app.$web3.eth.chainId()
-
         commit('setState', {
           selectedAccount,
           selectedAccountEnsName,
