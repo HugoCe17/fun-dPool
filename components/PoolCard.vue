@@ -24,6 +24,10 @@
         {{ desc }}
         <br />
       </div>
+
+      <footer class="card-footer">
+        <b-button tag="nuxt-link" :to="'pool/' + address">View</b-button>
+      </footer>
     </div>
   </div>
 </template>

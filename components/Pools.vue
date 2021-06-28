@@ -94,5 +94,6 @@ section {
   display: flex;
   flex-wrap: wrap;
   align-content: space-between;
+  justify-content: center;
 }
 </style>
