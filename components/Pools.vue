@@ -35,13 +35,13 @@ export default {
   },
   methods: {
     async getPools() {
+      console.log(this.fundPool)
       this.fundPool.methods
         .listPools()
         .call()
         .then(async (result) => {
           console.log('Get Pools Results', result)
           await this.organizePoolData(result)
-          console.log(this.pools)
         })
         .catch((err) => {
           console.log(err)
@@ -62,16 +62,14 @@ export default {
             const name = result.data.name
             const desc = result.data.description
 
-            if (pool.id != '0') {
-              let poolObject = {
-                address: pool.poolAddress,
-                owner: pool.poolOwner,
-                name: name,
-                desc: desc,
-                image: image.replaceAll('ipfs://', 'https://ipfs.io/ipfs/'),
-              }
-              this.pools.push(poolObject)
+            let poolObject = {
+              address: pool.poolAddress,
+              owner: pool.poolOwner,
+              name: name,
+              desc: desc,
+              image: image.replaceAll('ipfs://', 'https://ipfs.io/ipfs/'),
             }
+            this.pools.push(poolObject)
           })
       })
       console.log(newPools)

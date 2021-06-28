@@ -47,13 +47,7 @@
 				"type": "constructor"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "noOfShards",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "buyShards",
 				"outputs": [
 					{
@@ -63,6 +57,44 @@
 					}
 				],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "buyers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "buyersList",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -139,7 +171,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "soldShards",
+						"name": "soldShardsValueInETH",
 						"type": "uint256"
 					},
 					{
@@ -332,10 +364,10 @@
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x743a4d68720444534ed17310934294cead5bf0d64ef3d6a114f734adc5c1ecac",
+			"keccak256": "0x76cea8e64649901c50f5cf205799d62feab8aaab897396531619feefe5b5bc0a",
 			"urls": [
-				"bzz-raw://d48d87c2b7245d98f783cae80eeb6430d84127dd78a3272e3f77761241dd4603",
-				"dweb:/ipfs/QmaL5AVfwBYX2xW9PUr27wxpSWFncqqpJwqPHkzjoEhXgN"
+				"bzz-raw://f6f648ac8600ec1b55a1a4f641e8ab23e04a6ced0843d5f9eecc99de6f47c474",
+				"dweb:/ipfs/QmUztJg8VkUFxRixtyYPzSrR4LpmvpC8VXk9frMGmGEh8V"
 			]
 		}
 	},
