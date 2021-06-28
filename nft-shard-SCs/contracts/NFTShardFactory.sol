@@ -7,8 +7,8 @@ import "./NFTShardPool.sol";
 contract NFTShardFactory is ReentrancyGuard {
 
     using SafeMath for uint256;
-    uint256 ID;
-    address NFTShardERC721;
+    uint256 public ID;
+    address public NFTShardERC721;
 
     struct Pool {
         uint256 id;

@@ -17,6 +17,32 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "ID",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "NFTShardERC721",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -257,17 +283,17 @@
 			]
 		},
 		"contracts/NFTShardFactory.sol": {
-			"keccak256": "0xcb0585df502ee48133c8c92ef8a5b968e322958bd505c1c88c61287c311b2ff1",
+			"keccak256": "0x76bedbb880bf622fdfcbf24dfeebd81c0b1b2875c301f0f19df1c8d2db482ce0",
 			"urls": [
-				"bzz-raw://61bb50fb46c611a58a90cbf0cee349840b4bdf22b0afca742b3336ca00ca941e",
-				"dweb:/ipfs/QmcMPGxWxKHZdUR8A8EgTVEUGVQFqkymCTqEvxyKbDgu7r"
+				"bzz-raw://28b1404e38dacb48550ea81fa4fc67d43728156d33f6dfb1264a0ed28899c853",
+				"dweb:/ipfs/QmbB86S4g6kxoeEy5duRpuYbWdynuW1NVn9Y4J7dVwNpAy"
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x743a4d68720444534ed17310934294cead5bf0d64ef3d6a114f734adc5c1ecac",
+			"keccak256": "0x76cea8e64649901c50f5cf205799d62feab8aaab897396531619feefe5b5bc0a",
 			"urls": [
-				"bzz-raw://d48d87c2b7245d98f783cae80eeb6430d84127dd78a3272e3f77761241dd4603",
-				"dweb:/ipfs/QmaL5AVfwBYX2xW9PUr27wxpSWFncqqpJwqPHkzjoEhXgN"
+				"bzz-raw://f6f648ac8600ec1b55a1a4f641e8ab23e04a6ced0843d5f9eecc99de6f47c474",
+				"dweb:/ipfs/QmUztJg8VkUFxRixtyYPzSrR4LpmvpC8VXk9frMGmGEh8V"
 			]
 		}
 	},

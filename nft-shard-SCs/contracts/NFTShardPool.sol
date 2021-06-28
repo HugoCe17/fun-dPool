@@ -19,7 +19,7 @@ contract NFTShardPool {
         uint256 totalShards;
         uint256 startTime;
         uint256 pricePerShard;
-        uint256 soldShards;
+        uint256 soldShardsValueInETH;
         address payable owner;
         PoolStatus status;
         address ERC20Token;
@@ -29,7 +29,9 @@ contract NFTShardPool {
 
     PoolDetails public pool;
 
-    mapping(address => uint256) buyers;
+    mapping(address => uint256) public  buyers;
+
+    address[] public buyersList;
 
     modifier onlyOwner() {
         require(msg.sender == pool.owner, "Pool owner can only do this");
@@ -51,8 +53,8 @@ contract NFTShardPool {
         pool.deadline = _deadline;
         pool.totalShards = _totalShards;
         pool.startTime = block.timestamp;
-        pool.pricePerShard = (_totalShards.div(_totalShards));
-        pool.soldShards = 0;
+        pool.pricePerShard = (_totalPrice.div(_totalShards));
+        pool.soldShardsValueInETH = 0;
         pool.status = PoolStatus.active;
         pool.owner = _owner;
         pool.ERC20Token = address(new NFTShardERC20("Dummy tokens", "DUMMY"));
@@ -61,30 +63,34 @@ contract NFTShardPool {
         NFTShardERC20(pool.ERC20Token).mint(address(this), 1000000000000000000000000);
     }
 
-    function buyShards(uint256 noOfShards) public payable returns(uint) {
-        require(noOfShards > 0 , "Not allowed to borrow 0 shard");
+    function buyShards() public payable returns(uint) {
+        require(msg.value > 0 , "Not allowed to borrow 0 shard");
         require(pool.status == PoolStatus.active, "Pool is not active anymore");
         require(block.timestamp <= pool.startTime.add(pool.deadline), "Deadline is over");
-        require(msg.value >= noOfShards.mul(pool.pricePerShard), "Not enough ETH");
-        require(pool.totalShards.sub(pool.soldShards) >= noOfShards, "Not enough shards left to buy");
-        buyers[msg.sender] = noOfShards;
-        pool.soldShards = (pool.soldShards).add(noOfShards);
+        buyers[msg.sender] = buyers[msg.sender].add(msg.value);
+        pool.soldShardsValueInETH = address(this).balance.add(msg.value);
         // deposit to aave
-        return noOfShards;
+        if(!buyerAlreadyInList(msg.sender)) {
+            buyersList.push(msg.sender);
+        }
+        
+        return msg.value;
     }
 
     function mintNFTandShard() public onlyOwner returns(address){
         require(block.timestamp >= pool.startTime.add(pool.deadline), "Deadline not over" );
         require(pool.status == PoolStatus.active, "Pool must be active");
 
-        if(pool.soldShards == pool.totalShards) {
+        if(address(this).balance >= pool.totalPrice) {
             // mint ERC721
             tokenERC721.mint(pool.nftURI);
             // shard it & get the ERC20Token address
             // withdraw from Aave + interest
             // set status as claim
             pool.status = PoolStatus.claim;
-            // transfer the fixed amount to owner
+            // tranfer the shards to buyers
+            transferShardsToBuyers();
+             // transfer the fixed amount to owner
             pool.owner.transfer(address(this).balance);
             return pool.ERC20Token;
         }
@@ -100,7 +106,8 @@ contract NFTShardPool {
         require(pool.status == PoolStatus.inactive, "Pool must be inactive");
         require(buyers[msg.sender] > 0, "No shards bought");
         // add profit to it once aave/compound is there
-        msg.sender.transfer(buyers[msg.sender].mul(pool.pricePerShard));
+        msg.sender.transfer(buyers[msg.sender]);
+        buyers[msg.sender] = 0;
     }
 
     function claimShards() public {
@@ -114,6 +121,22 @@ contract NFTShardPool {
     function closePool() public onlyOwner returns(bool) {
         // some logic
         return true;
+    }
+
+    function buyerAlreadyInList(address searchUser) internal view  returns(bool){
+        for(uint256 i = 0; i< buyersList.length; i++) {
+            if(buyersList[i] == searchUser) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function transferShardsToBuyers() internal {
+        for(uint256 i = 0; i< buyersList.length; i++) {
+            uint256 share = (buyers[buyersList[i]]).mul(pool.totalShards).div(address(this).balance); 
+            NFTShardERC20(pool.ERC20Token).transfer(buyersList[i], share.mul(10**18));    
+        }
     }
 
 }
