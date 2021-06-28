@@ -37,12 +37,15 @@ export default {
   },
 
   mounted() {
-    this.$web3Modal.cachedProvider && this.$store.dispatch('connectToWallet')
+    if (this.$web3Modal.cachedProvider) {
+      this.$store.dispatch('connectToWallet')
+    }
   },
 
   destroyed() {
-    this.$web3.currentProvider &&
+    if (this.$web3.currentProvider) {
       this.$web3.currentProvider.removeAllListeners()
+    }
   },
 
   methods: {
