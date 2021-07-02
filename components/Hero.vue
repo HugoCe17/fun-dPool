@@ -4,12 +4,12 @@
       <div class="hero-body">
         <div class="columns holder">
           <div class="column is-three-quarters">
-            <p class="title is-size-1 has-text-weight-bold">Fun dPool</p>
-            <!-- <p class="subtitle is-italic has-text-weight-light">
-              Fractionalized NFTs.
-            </p> -->
+            <p class="title is-size-1 has-text-weight-bold">Fun-dPool</p>
+            <p class="subtitle is-italic has-text-weight-light">
+              Kickstart and fractionalize any NFT project with minimal cost.
+            </p>
             <h1 class="is-size-2 mt-6">
-              <div ref="typeEffect" style="width: 100vw"></div>
+              <div ref="typeEffect" style="width: 50vw"></div>
             </h1>
             <br />
           </div>
@@ -33,7 +33,7 @@ export default {
       loop: true,
       loopDelay: 3000,
     })
-      .type('Fractionalize your NFTs')
+      .type('Find a product market fit, sponsors, and community all  before minitng your NFT. ')
       .go()
   },
 }

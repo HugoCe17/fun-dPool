@@ -10,7 +10,7 @@
       >
         <img :src="require('~/assets/Logo.png')" />
         <label
-          class="mx-2"
+          class="mx-1 pa-3"
           :class="
             {
               title: $device.isDesktop,
@@ -136,7 +136,7 @@ export default {
   }
 }
 img {
-  min-height: 100px;
+  min-height: 50px;
   transform: rotate(var(--angle));
   animation: animationname 25s linear infinite;
   -webkit-animation: animationname 25s linear infinite;
