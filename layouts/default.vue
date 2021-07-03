@@ -36,9 +36,9 @@ export default {
     ...mapState(['selectedAccount', 'chainId', 'isLoading']),
   },
 
-  mounted() {
+  async mounted() {
     if (this.$web3Modal.cachedProvider) {
-      this.$store.dispatch('connectToWallet')
+      await this.$store.dispatch('connectToWallet')
     }
   },
 
