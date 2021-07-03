@@ -5,43 +5,52 @@
         <h1>Active Pools</h1>
       </div>
     </div>
-    <div class="columns" v-for="(pool, index) in pools">
+    <div v-for="(pool, index) in pools" class="columns">
       <pool-card
-        v-bind:owner="pool.owner"
-        v-bind:address="pool.address"
-        v-bind:name="pool.name"
-        v-bind:desc="pool.desc"
-        v-bind:image="pool.image"
+        :owner="pool.owner"
+        :address="pool.address"
+        :name="pool.name"
+        :desc="pool.desc"
+        :image="pool.image"
       ></pool-card>
     </div>
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import fundPoolABI from '~/contracts/ABI/NFTShardFactory.json'
 import { KOVAN_NFTSHARDFACTORY } from '~/constants'
 import PoolCard from '~/components/PoolCard.vue'
 
 export default {
-  async mounted() {
-    this.fundPool = await new this.$web3.eth.Contract(
-      fundPoolABI.abi,
-      KOVAN_NFTSHARDFACTORY
-    )
-    await this.getPools()
-  },
   components: {
     PoolCard,
   },
   data() {
     return {
       pools: [],
+      fundPool: null,
     }
+  },
+  computed: {
+    ...mapState(['selectedAccount']),
+  },
+  async mounted() {
+    if (this.$web3Modal.cachedProvider) {
+      await this.$store.dispatch('connectToWallet')
+    }
+    this.fundPool = await new this.$web3.eth.Contract(
+      fundPoolABI.abi,
+      KOVAN_NFTSHARDFACTORY
+    )
+    this.fundPool.options.from = this.selectedAccount
+    await this.getPools()
   },
   methods: {
     async getPools() {
       console.log(this.fundPool)
-      this.fundPool.methods
+      await this.fundPool.methods
         .listPools()
         .call()
         .then(async (result) => {
@@ -55,8 +64,7 @@ export default {
     async organizePoolData(result) {
       console.log('contract results', result)
       const newPools = []
-      result
-      result.map(async (pool) => {
+      result.forEach(async (pool) => {
         console.log('Each pool item', pool)
         const JSONMetadata = await this.$axios
           .get(
@@ -68,11 +76,11 @@ export default {
             const name = result.data.name
             const desc = result.data.description
 
-            let poolObject = {
+            const poolObject = {
               address: pool.poolAddress,
               owner: pool.poolOwner,
-              name: name,
-              desc: desc,
+              name,
+              desc,
               image: image.replaceAll('ipfs://', 'https://ipfs.io/ipfs/'),
             }
             this.pools.push(poolObject)
