@@ -290,10 +290,10 @@
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x76cea8e64649901c50f5cf205799d62feab8aaab897396531619feefe5b5bc0a",
+			"keccak256": "0xdca74f38f6c5d631d498d21f6e8c4bbdce6154ead133555c082d6a141570d868",
 			"urls": [
-				"bzz-raw://f6f648ac8600ec1b55a1a4f641e8ab23e04a6ced0843d5f9eecc99de6f47c474",
-				"dweb:/ipfs/QmUztJg8VkUFxRixtyYPzSrR4LpmvpC8VXk9frMGmGEh8V"
+				"bzz-raw://e045f73896940f6d0245d9b418119475754dafb5401fdd15d0ad20973938c535",
+				"dweb:/ipfs/QmW64AyhZRaHVdXzKWh2GUR4Y8fsvGbEZDNhcg7hF5pzu3"
 			]
 		}
 	},

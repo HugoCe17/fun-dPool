@@ -98,7 +98,9 @@ export default {
       fundPoolABI.abi,
       this.address
     )
-    this.balance = this.$web3.utils.fromWei(await this.$web3.eth.getBalance(this.address))
+    this.balance = this.$web3.utils.fromWei(
+      await this.$web3.eth.getBalance(this.address)
+    )
 
     await this.fundPool.methods
       .pool()
@@ -119,14 +121,24 @@ export default {
         this.poolDetails.ERC20Token = res.ERC20Token
         this.poolDetails.deadline = (res.deadline / 86400).toFixed(0)
         this.poolDetails.owner = res.owner
-        this.poolDetails.totalPrice =  this.$web3.utils.fromWei(res.totalPrice)
+        this.poolDetails.totalPrice = this.$web3.utils.fromWei(res.totalPrice)
         this.poolDetails.status = res.status
         this.$forceUpdate()
       })
-  console.log(this.fundPool)
+    console.log(this.fundPool)
 
-      await this.fundPool.methods.buyers(this.selectedAccount).call().then((result) => {
+    await this.fundPool.methods
+      .buyers(this.selectedAccount)
+      .call()
+      .then((result) => {
         this.poolDetails.poolInvestment = result
+      })
+
+    await this.fundPool.methods
+      .getBuyersCount()
+      .call()
+      .then((result) => {
+        this.poolDetails.backers = result
       })
   },
   methods: {
@@ -144,7 +156,10 @@ export default {
     contribute() {
       this.fundPool.methods
         .buyShards()
-        .send({ from: this.selectedAccount, value: this.$web3.utils.toWei(this.contribution) })
+        .send({
+          from: this.selectedAccount,
+          value: this.$web3.utils.toWei(this.contribution),
+        })
         .then((res) => {
           console.log(res)
           this.contribution = ''
@@ -156,7 +171,7 @@ export default {
     close() {
       this.fundPool.methods
         .closePool()
-        .send({ from: this.selectedAccount})
+        .send({ from: this.selectedAccount })
         .then((res) => {
           console.log(res)
         })
@@ -165,7 +180,7 @@ export default {
         })
     },
     async mintAndShard() {
-      var timestamp =  await this.$web3.eth.getBlock("latest")
+      var timestamp = await this.$web3.eth.getBlock('latest')
       console.log(timestamp)
       this.fundPool.methods
         .mintNFTandShard()
@@ -176,15 +191,15 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    }
+    },
   },
 }
 </script>
 <style>
 .imageHolder {
-    display: flex;
-    justify-content: center;
-    padding: 2rem;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
 }
 .poolHeading {
   text-align: center;
