@@ -32,7 +32,9 @@
               <p>
                 <b-icon icon="upload" size="is-large"> </b-icon>
               </p>
-              <p>Drop your files here or click to upload</p>
+              <span class="file-label">{{
+                newPoolFile.name || 'Drop your files here or click to upload'
+              }}</span>
             </div>
           </section>
         </b-upload>
@@ -42,7 +44,7 @@
         label="Target Price"
         icon="account-plus"
       >
-        <h1>What is your fund goal? ($)</h1>
+        <h1>What is your fund goal? (Ξ)</h1>
         <b-input v-model="newPoolGoal" type="number"></b-input
       ></b-step-item>
       <b-step-item
@@ -50,7 +52,7 @@
         label="Funding period"
         icon="account-plus"
       >
-        <h1>How long would you like to raise funds for? (Day?)</h1>
+        <h1>How long would you like to raise funds for? (Days)</h1>
         <b-input v-model="newPoolSpan" type="number"></b-input
       ></b-step-item>
       <b-step-item
@@ -80,7 +82,7 @@ export default {
       isStartingProject: false,
       newPoolName: '',
       newPoolDesc: '',
-      newPoolFile: null,
+      newPoolFile: {},
       newPoolGoal: 100,
       newPoolSpan: 0,
     }
@@ -147,7 +149,12 @@ export default {
     },
     createPool(metadata) {
       this.fundPool.methods
-        .createPool(metadata.url, this.newPoolGoal, 100, this.newPoolSpan)
+        .createPool(
+          metadata.url,
+          this.$web3.utils.toWei(this.newPoolGoal),
+          100,
+          this.newPoolSpan * 86400
+        )
         .send({ from: this.selectedAccount })
         .then((result) => {
           console.log(result)
