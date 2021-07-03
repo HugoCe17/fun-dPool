@@ -19,13 +19,13 @@
           <div class="column is-full">
             <b-progress
               type="is-success"
-              :value="(balance / poolDetails.totalPrice) * 100"
+              :value="(poolDetails.valueInEth / poolDetails.totalPrice) * 100"
               show-value
               format="percent"
             ></b-progress>
           </div>
           <div class="column is-full">
-            <h1>Ξ{{ balance }} pooled of Ξ{{ poolDetails.totalPrice }} goal</h1>
+            <h1><strong>Ξ{{ poolDetails.valueInEth }}</strong> $({{Number(poolDetails.valueInUsd).toFixed(2)}}) pooled of <strong>Ξ{{ poolDetails.totalPrice }}</strong> $({{Number(poolDetails.totalPriceInUsd).toFixed(2)}}) goal</h1>
           </div>
           <div class="column is-full">
             <h1>{{ poolDetails.backers }} backers</h1>
@@ -103,6 +103,8 @@ export default {
       contributionLoading: false,
       poolDetails: {
         backers: 0,
+        valueInEth: 0,
+        valueInUsd: 0,
       },
     }
   },
@@ -115,6 +117,24 @@ export default {
       this.address
     )
     this.getData()
+    setInterval(() => {
+      this.poolDetails.valueInEth = (
+        Number(this.poolDetails.valueInEth) +
+        (Number(this.poolDetails.valueInEth) * (Number(this.poolAPY) / 100)) /
+          365 /
+          24 /
+          60 /
+          60
+      ).toFixed(4)
+      this.poolDetails.valueInUsd = (
+        Number(this.poolDetails.valueInUsd) +
+        (Number(this.poolDetails.valueInUsd) * (Number(this.poolAPY) / 100)) /
+          365 /
+          24 /
+          60 /
+          60
+      ).toFixed(2)
+    }, 1000)
   },
   methods: {
     truncateAddress(address) {
@@ -189,6 +209,7 @@ export default {
       return time
     },
     async getData() {
+      console.log('getting data')
       this.balance = this.$web3.utils.fromWei(
         await this.$web3.eth.getBalance(this.address)
       )
@@ -214,7 +235,17 @@ export default {
           this.poolDetails.deadline = (res.deadline / 86400).toFixed(0)
           this.poolDetails.owner = res.owner
           this.poolDetails.totalPrice = this.$web3.utils.fromWei(res.totalPrice)
+          this.poolDetails.totalPriceInUsd = this.$web3.utils.fromWei(
+            res.totalPriceInUSD
+          )
           this.poolDetails.status = res.status
+          this.poolDetails.valueInEth = this.$web3.utils.fromWei(
+            res.soldShardsValueInETH
+          )
+          this.poolDetails.valueInUsd = this.$web3.utils.fromWei(
+            res.soldShardsValueInUSD
+          )
+
           this.poolDetails.timeRemaining =
             Number(res.startTime) +
             Number(res.deadline) -

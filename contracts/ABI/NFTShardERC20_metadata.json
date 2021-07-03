@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.0+commit.9e61f92b"
+		"version": "0.7.6+commit.7338295f"
 	},
 	"language": "Solidity",
 	"output": {
@@ -404,10 +404,10 @@
 			]
 		},
 		"contracts/NFTShardERC20.sol": {
-			"keccak256": "0x90bcd2d4444ba75ffdea57ea539f3d9f16d5e59ecc1a403fed9b0ae914ba22d8",
+			"keccak256": "0x815ac233bb00df47fa504ce8d6fde3899d7985c45ff942d4761726b7819f1e16",
 			"urls": [
-				"bzz-raw://ee275cc17c94a0a70b921664862e3443809dd8d6ba26744a5466d9728ee228d6",
-				"dweb:/ipfs/QmQWXezBUZXheQGTfW3xsUJnY7RCPRvbh1zLZgyjosaj4C"
+				"bzz-raw://a7f7c6bc77c3263d54f313cd099f12446d85a5c74e187e20f708e9f0e75f05b0",
+				"dweb:/ipfs/QmauiwQkdp86CSdkDwSy1yVPHvXtF9GchC5qENcafeUPP9"
 			]
 		}
 	},

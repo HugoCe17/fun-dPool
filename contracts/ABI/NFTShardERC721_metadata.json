@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.0+commit.9e61f92b"
+		"version": "0.7.6+commit.7338295f"
 	},
 	"language": "Solidity",
 	"output": {
@@ -618,11 +618,11 @@
 			]
 		},
 		"contracts/NFTShardERC721.sol": {
-			"keccak256": "0x38bd63e51cb7df542754483804c60a9650b4ae1170a63bf3320fb20cf5057560",
+			"keccak256": "0xa9ef43eb011f271ed018ea8cd350a05206dd2417c22f227fed699c832308df65",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0771b48ca9bb649055edad919c3ada42a9dbb31a8c2b192b90e9faf073e4d946",
-				"dweb:/ipfs/QmdJJusaMZqTATwfFTqFprjKxea5sgdaxNAsc7tcDTdyru"
+				"bzz-raw://c54f68c02755d5a2047e1229441261e8a290173e7471274ddcaf38a4616a78b5",
+				"dweb:/ipfs/QmTc2ZrdEemFq7E7m7CbiBRy6YjZnxrcAjozwFbVtC2r4u"
 			]
 		}
 	},

@@ -84,7 +84,7 @@ export default {
       newPoolName: '',
       newPoolDesc: '',
       newPoolFile: {},
-      newPoolGoal: 1,
+      newPoolGoal: '1',
       newPoolSpan: 0,
       createPoolLoading: false,
     }

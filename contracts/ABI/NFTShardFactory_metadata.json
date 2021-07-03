@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.0+commit.9e61f92b"
+		"version": "0.7.6+commit.7338295f"
 	},
 	"language": "Solidity",
 	"output": {
@@ -11,10 +11,28 @@
 						"internalType": "address",
 						"name": "_addr",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_priceFeed",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "ChainlinkPriceFeedAddr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -267,33 +285,47 @@
 				"dweb:/ipfs/QmUMzkyH3ytJX5gVPizQruNLhkKmuJb3nFqBDad4LPdg5U"
 			]
 		},
-		"contracts/NFTShardERC20.sol": {
-			"keccak256": "0x90bcd2d4444ba75ffdea57ea539f3d9f16d5e59ecc1a403fed9b0ae914ba22d8",
+		"contracts/Compound.sol": {
+			"keccak256": "0x103e1c41860f8fbe19871dec3a5bb4909d80e512f9144d9d9e0b56154d00e225",
 			"urls": [
-				"bzz-raw://ee275cc17c94a0a70b921664862e3443809dd8d6ba26744a5466d9728ee228d6",
-				"dweb:/ipfs/QmQWXezBUZXheQGTfW3xsUJnY7RCPRvbh1zLZgyjosaj4C"
+				"bzz-raw://88ecc2870e58c1868159b0c10f88028f8d8bb1c443d98e1d33dce57b7e71926a",
+				"dweb:/ipfs/QmNQmq1eNdwjMfhTSx5yXh9xbPG2jrTE5MLuq21ZPGzibF"
+			]
+		},
+		"contracts/IChainlinkPriceFeed.sol": {
+			"keccak256": "0x7afcf9253a5c4a9c70178ec9e90b9f1c601efa72854cd40b55d86a161214f57e",
+			"urls": [
+				"bzz-raw://efebdc27ac35d798ce19aeac154996960f52fdb56b59e37a0d845e5513f253ac",
+				"dweb:/ipfs/QmTkaZAwVrhLgWeP8AuHQzUzskh6FqqBv7UMDjo313RDBJ"
+			]
+		},
+		"contracts/NFTShardERC20.sol": {
+			"keccak256": "0x815ac233bb00df47fa504ce8d6fde3899d7985c45ff942d4761726b7819f1e16",
+			"urls": [
+				"bzz-raw://a7f7c6bc77c3263d54f313cd099f12446d85a5c74e187e20f708e9f0e75f05b0",
+				"dweb:/ipfs/QmauiwQkdp86CSdkDwSy1yVPHvXtF9GchC5qENcafeUPP9"
 			]
 		},
 		"contracts/NFTShardERC721.sol": {
-			"keccak256": "0x38bd63e51cb7df542754483804c60a9650b4ae1170a63bf3320fb20cf5057560",
+			"keccak256": "0xa9ef43eb011f271ed018ea8cd350a05206dd2417c22f227fed699c832308df65",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0771b48ca9bb649055edad919c3ada42a9dbb31a8c2b192b90e9faf073e4d946",
-				"dweb:/ipfs/QmdJJusaMZqTATwfFTqFprjKxea5sgdaxNAsc7tcDTdyru"
+				"bzz-raw://c54f68c02755d5a2047e1229441261e8a290173e7471274ddcaf38a4616a78b5",
+				"dweb:/ipfs/QmTc2ZrdEemFq7E7m7CbiBRy6YjZnxrcAjozwFbVtC2r4u"
 			]
 		},
 		"contracts/NFTShardFactory.sol": {
-			"keccak256": "0x76bedbb880bf622fdfcbf24dfeebd81c0b1b2875c301f0f19df1c8d2db482ce0",
+			"keccak256": "0x8ee3fa5c6590294897d479e3fa8705eb61f33461b15eae2a5d3275454562f190",
 			"urls": [
-				"bzz-raw://28b1404e38dacb48550ea81fa4fc67d43728156d33f6dfb1264a0ed28899c853",
-				"dweb:/ipfs/QmbB86S4g6kxoeEy5duRpuYbWdynuW1NVn9Y4J7dVwNpAy"
+				"bzz-raw://83120a47003277850daf1d12ceabcf4378d02fd638286b8d5cf4e2979e0d6eac",
+				"dweb:/ipfs/QmdtFed3H78dbLeDjfwT2fN4p1JejU9f6fG98qTriNsm5m"
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0xdca74f38f6c5d631d498d21f6e8c4bbdce6154ead133555c082d6a141570d868",
+			"keccak256": "0x24eff7b379ac235382ce44348bc88eb26aaa2790a638d1bfd537d50a8159ed2f",
 			"urls": [
-				"bzz-raw://e045f73896940f6d0245d9b418119475754dafb5401fdd15d0ad20973938c535",
-				"dweb:/ipfs/QmW64AyhZRaHVdXzKWh2GUR4Y8fsvGbEZDNhcg7hF5pzu3"
+				"bzz-raw://09d9ed1e742ee80fbd0df8a6f3c6053160a88ac9411a45f57e971be56fa834f0",
+				"dweb:/ipfs/QmP7pARUgag61YtWh3u9A18y65U8NQXYAxMLpEBHLUWtWY"
 			]
 		}
 	},
