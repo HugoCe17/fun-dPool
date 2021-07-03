@@ -123,6 +123,10 @@ contract NFTShardPool {
         return true;
     }
 
+    function getBuyersCount() public view returns(uint256 count) {
+        return buyersList.length;
+    }
+
     function buyerAlreadyInList(address searchUser) internal view  returns(bool){
         for(uint256 i = 0; i< buyersList.length; i++) {
             if(buyersList[i] == searchUser) {
