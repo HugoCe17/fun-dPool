@@ -1,6 +1,11 @@
 <template>
   <section>
-    <div v-for="(pool, index) in pools">
+    <div class="columns heading">
+      <div class="column is-full">
+        <h1>Active Pools</h1>
+      </div>
+    </div>
+    <div class="columns" v-for="(pool, index) in pools">
       <pool-card
         v-bind:owner="pool.owner"
         v-bind:address="pool.address"
@@ -50,6 +55,7 @@ export default {
     async organizePoolData(result) {
       console.log('contract results', result)
       const newPools = []
+      result
       result.map(async (pool) => {
         console.log('Each pool item', pool)
         const JSONMetadata = await this.$axios
@@ -72,6 +78,7 @@ export default {
             this.pools.push(poolObject)
           })
       })
+      this.pools.reverse()
       console.log(newPools)
     },
   },
@@ -87,11 +94,14 @@ h1 {
   font-size: 64px;
   font-weight: 200;
 }
-
 section {
   display: flex;
   flex-wrap: wrap;
   align-content: space-between;
   justify-content: center;
+}
+.heading {
+  width: 100vw;
+  text-align: center;
 }
 </style>

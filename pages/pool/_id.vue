@@ -3,17 +3,17 @@
     <div class="container heading my-6">
       <div class="columns">
         <div class="column is-full is-family-code has-text-center">
-          <h1 class="is-size-1 has-text-weight-thin ma-3">
+          <h1 class="poolHeading is-size-1 has-text-weight-thin ma-3">
             {{ poolDetails.name || null }}
           </h1>
-          <p class="has-text-grey">{{ poolDetails.desc || null }}</p>
+          <p class="poolHeading has-text-grey">{{ poolDetails.desc || null }}</p>
         </div>
       </div>
     </div>
     <div class="container">
       <div class="columns">
-        <div class="column is-three-quarters p-1 mx-2">
-          <b-image :src="poolDetails.image"></b-image>
+        <div class="column imageHolder is-three-quarters p-1 mx-2">
+          <img class="image" :src="poolDetails.image"></img>
         </div>
         <div class="column px-1 mx-2 is-one-quarter">
           <div class="column is-full">
@@ -25,7 +25,7 @@
             ></b-progress>
           </div>
           <div class="column is-full">
-            <h1>${{ balance }} pooled of ${{ poolDetails.totalPrice }} goal</h1>
+            <h1>Ξ{{ balance }} pooled of Ξ{{ poolDetails.totalPrice }} goal</h1>
           </div>
           <div class="column is-full">
             <h1>{{ poolDetails.backers }} backers</h1>
@@ -34,7 +34,8 @@
             <h1>{{ poolDetails.deadline }} days to go</h1>
           </div>
           <div class="column mt-6 is-full">
-            <b-button @click.native="contribute">Own NFT</b-button>
+            <b-input v-model='contribution' type='number' step="any" placeholder="Contribution in Ξ"></b-input>
+            <b-button @click.native="contribute">Add to Pool</b-button>
           </div>
         </div>
       </div>
@@ -46,6 +47,15 @@
         </div>
         <div class="column auto px-3 my-3">
           <p>Pool Boost Rate {{ poolAPY }}%</p>
+        </div>
+      </div>
+    </div>
+        <div class="container">
+      <div class="columns">
+        <div class="column auto px-3 my-3"> 
+          <h1>Owner Settings</h1>    
+            <b-button @click.native="mintAndShard">Mint and Shard</b-button>
+            <b-button @click.native="close">Close</b-button>     
         </div>
       </div>
     </div>
@@ -77,8 +87,9 @@ export default {
       fundPool: null,
       poolAPY: 4000000,
       balance: 0,
+      contribution: null,
       poolDetails: {
-        backers: 420,
+        backers: 0,
       },
     }
   },
@@ -87,7 +98,7 @@ export default {
       fundPoolABI.abi,
       this.address
     )
-    this.balance = await this.$web3.eth.getBalance(this.address)
+    this.balance = this.$web3.utils.fromWei(await this.$web3.eth.getBalance(this.address))
 
     await this.fundPool.methods
       .pool()
@@ -106,10 +117,16 @@ export default {
           })
         this.poolDetails.startTime = res.startTime
         this.poolDetails.ERC20Token = res.ERC20Token
-        this.poolDetails.deadline = res.deadline
+        this.poolDetails.deadline = (res.deadline / 86400).toFixed(0)
         this.poolDetails.owner = res.owner
-        this.poolDetails.totalPrice = res.totalPrice
+        this.poolDetails.totalPrice =  this.$web3.utils.fromWei(res.totalPrice)
+        this.poolDetails.status = res.status
         this.$forceUpdate()
+      })
+  console.log(this.fundPool)
+
+      await this.fundPool.methods.buyers(this.selectedAccount).call().then((result) => {
+        this.poolDetails.poolInvestment = result
       })
   },
   methods: {
@@ -126,8 +143,20 @@ export default {
     },
     contribute() {
       this.fundPool.methods
-        .buyShards(1)
-        .send({ from: this.selectedAccount })
+        .buyShards()
+        .send({ from: this.selectedAccount, value: this.$web3.utils.toWei(this.contribution) })
+        .then((res) => {
+          console.log(res)
+          this.contribution = ''
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    close() {
+      this.fundPool.methods
+        .closePool()
+        .send({ from: this.selectedAccount})
         .then((res) => {
           console.log(res)
         })
@@ -135,6 +164,29 @@ export default {
           console.log(err)
         })
     },
+    async mintAndShard() {
+      var timestamp =  await this.$web3.eth.getBlock("latest")
+      console.log(timestamp)
+      this.fundPool.methods
+        .mintNFTandShard()
+        .send({ from: this.selectedAccount })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   },
 }
 </script>
+<style>
+.imageHolder {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+.poolHeading {
+  text-align: center;
+}
+</style>
