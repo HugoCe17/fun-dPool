@@ -119,6 +119,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "getBuyersCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "count",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "mintNFTandShard",
 				"outputs": [
 					{
@@ -364,10 +377,10 @@
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x76cea8e64649901c50f5cf205799d62feab8aaab897396531619feefe5b5bc0a",
+			"keccak256": "0x6ada48eacd26c97d370d19549f8332e2e2c327852e5703badb8c22fc804baf63",
 			"urls": [
-				"bzz-raw://f6f648ac8600ec1b55a1a4f641e8ab23e04a6ced0843d5f9eecc99de6f47c474",
-				"dweb:/ipfs/QmUztJg8VkUFxRixtyYPzSrR4LpmvpC8VXk9frMGmGEh8V"
+				"bzz-raw://1804948ff5357262d4cc62cefcfbcce6656ad595ef18eaa03518c35ceed5e28a",
+				"dweb:/ipfs/QmSCDgfjWwxwCvmHNp8MGPRB4upchHxBGYg645bQFWX87f"
 			]
 		}
 	},

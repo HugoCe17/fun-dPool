@@ -60,7 +60,7 @@ contract NFTShardPool {
         pool.ERC20Token = address(new NFTShardERC20("Dummy tokens", "DUMMY"));
         tokenERC721 = NFTShardERC721(_tokenERC721);
         // now minting dummy tokens -- later to be replced by NFTFY returned ERC20 tokens
-        NFTShardERC20(pool.ERC20Token).mint(address(this), 1000000000000000000000000);
+        NFTShardERC20(pool.ERC20Token).mint(address(this), _totalShards);
     }
 
     function buyShards() public payable returns(uint) {
