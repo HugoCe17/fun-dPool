@@ -99,14 +99,14 @@ export const actions: ActionTree<RootState, RootState> = {
 
     if (state.chainId > -1 && state.selectedAccount) {
       commit('setLoadingStatus', false)
-      return Toast.open({
-        message: `${state.selectedAccount} \n chainId: ${Number(
-          state.chainId
-        )}`,
-        position: 'is-top',
-        duration: 10000,
-        queue: false,
-      })
+      // return Toast.open({
+      //   message: `${state.selectedAccount} \n chainId: ${Number(
+      //     state.chainId
+      //   )}`,
+      //   position: 'is-top',
+      //   duration: 10000,
+      //   queue: false,
+      // })
     }
 
     try {
