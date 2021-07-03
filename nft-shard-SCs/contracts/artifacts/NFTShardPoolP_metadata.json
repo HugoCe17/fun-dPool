@@ -8,8 +8,38 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_uri",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_deadline",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalShards",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "_owner",
+						"type": "address"
+					},
+					{
 						"internalType": "address",
-						"name": "_addr",
+						"name": "_tokenERC721",
 						"type": "address"
 					},
 					{
@@ -23,20 +53,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "ChainlinkPriceFeedAddr",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "ID",
+				"name": "buyShards",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -44,17 +61,23 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "NFTShardERC721",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"name": "buyers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -63,27 +86,25 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "URI",
-						"type": "string"
-					},
-					{
 						"internalType": "uint256",
-						"name": "totalPrice",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "totalShards",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "deadline",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "createPool",
+				"name": "buyersList",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "closePool",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -96,38 +117,113 @@
 			},
 			{
 				"inputs": [],
-				"name": "listPools",
+				"name": "getBuyersCount",
 				"outputs": [
 					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "poolNftURI",
-								"type": "string"
-							},
-							{
-								"internalType": "address",
-								"name": "poolAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "poolOwner",
-								"type": "address"
-							}
-						],
-						"internalType": "struct NFTShardFactory.Pool[]",
-						"name": "",
-						"type": "tuple[]"
+						"internalType": "uint256",
+						"name": "count",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "mintNFTandShard",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pool",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "nftURI",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPriceInUSD",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deadline",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalShards",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "soldShardsValueInETH",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "soldShardsValueInUSD",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lendingProfit",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lendingProfitInUSD",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum NFTShardPoolP.PoolStatus",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "ERC20Token",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdrawETH",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -143,7 +239,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/NFTShardFactory.sol": "NFTShardFactory"
+			"contracts/NFTShardPoolP.sol": "NFTShardPoolP"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -151,7 +247,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -269,14 +365,6 @@
 				"dweb:/ipfs/Qmf9YZzzRFuvMnav9dgmeRUpdYMMECiZX8w25sHWVbA18V"
 			]
 		},
-		"@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
-			"keccak256": "0x8bbbc2f5c10065ee272592ae0a7a6ceb23de2fbd81564ee0bb015ecf404d5f61",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://b95e56c1640d0ef789fc5c16269e141e992f6c8ac97cc6d377bd3825e9cab182",
-				"dweb:/ipfs/QmVzaxJZY51EhagrcNnkxoU6Uq17RhATe7aHvtkC6wUkgK"
-			]
-		},
 		"@openzeppelin/contracts/utils/Strings.sol": {
 			"keccak256": "0xa1e12f97981f1d0964b1c048978606a57127c56c438bab61cdfe269cad859a74",
 			"license": "MIT",
@@ -314,18 +402,11 @@
 				"dweb:/ipfs/QmTc2ZrdEemFq7E7m7CbiBRy6YjZnxrcAjozwFbVtC2r4u"
 			]
 		},
-		"contracts/NFTShardFactory.sol": {
-			"keccak256": "0x8ee3fa5c6590294897d479e3fa8705eb61f33461b15eae2a5d3275454562f190",
+		"contracts/NFTShardPoolP.sol": {
+			"keccak256": "0x5ad18b18a49eabb1567e2f4b28b328d3b5228b7620b7657e7aea5c82b6accfeb",
 			"urls": [
-				"bzz-raw://83120a47003277850daf1d12ceabcf4378d02fd638286b8d5cf4e2979e0d6eac",
-				"dweb:/ipfs/QmdtFed3H78dbLeDjfwT2fN4p1JejU9f6fG98qTriNsm5m"
-			]
-		},
-		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x24eff7b379ac235382ce44348bc88eb26aaa2790a638d1bfd537d50a8159ed2f",
-			"urls": [
-				"bzz-raw://09d9ed1e742ee80fbd0df8a6f3c6053160a88ac9411a45f57e971be56fa834f0",
-				"dweb:/ipfs/QmP7pARUgag61YtWh3u9A18y65U8NQXYAxMLpEBHLUWtWY"
+				"bzz-raw://2613a400d883b162431d628d119c0710bf3bab2833e974ab05460e76ebe9ee38",
+				"dweb:/ipfs/QmXbvCiAXpYh7QceLGasohfRWxV5F9wQLysQbrx2gNrKFS"
 			]
 		}
 	},

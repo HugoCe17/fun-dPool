@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.0+commit.9e61f92b"
+		"version": "0.7.6+commit.7338295f"
 	},
 	"language": "Solidity",
 	"output": {
@@ -40,6 +40,11 @@
 					{
 						"internalType": "address",
 						"name": "_tokenERC721",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_priceFeed",
 						"type": "address"
 					}
 				],
@@ -99,13 +104,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "claimShards",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "closePool",
 				"outputs": [
 					{
@@ -148,11 +146,6 @@
 				"name": "pool",
 				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
 						"internalType": "string",
 						"name": "nftURI",
 						"type": "string"
@@ -160,6 +153,11 @@
 					{
 						"internalType": "uint256",
 						"name": "totalPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPriceInUSD",
 						"type": "uint256"
 					},
 					{
@@ -179,18 +177,23 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "pricePerShard",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "soldShardsValueInETH",
 						"type": "uint256"
 					},
 					{
-						"internalType": "address payable",
-						"name": "owner",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "soldShardsValueInUSD",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lendingProfit",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lendingProfitInUSD",
+						"type": "uint256"
 					},
 					{
 						"internalType": "enum NFTShardPool.PoolStatus",
@@ -200,6 +203,11 @@
 					{
 						"internalType": "address",
 						"name": "ERC20Token",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "owner",
 						"type": "address"
 					}
 				],
@@ -212,6 +220,10 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -361,26 +373,40 @@
 				"dweb:/ipfs/QmUMzkyH3ytJX5gVPizQruNLhkKmuJb3nFqBDad4LPdg5U"
 			]
 		},
-		"contracts/NFTShardERC20.sol": {
-			"keccak256": "0x90bcd2d4444ba75ffdea57ea539f3d9f16d5e59ecc1a403fed9b0ae914ba22d8",
+		"contracts/Compound.sol": {
+			"keccak256": "0x103e1c41860f8fbe19871dec3a5bb4909d80e512f9144d9d9e0b56154d00e225",
 			"urls": [
-				"bzz-raw://ee275cc17c94a0a70b921664862e3443809dd8d6ba26744a5466d9728ee228d6",
-				"dweb:/ipfs/QmQWXezBUZXheQGTfW3xsUJnY7RCPRvbh1zLZgyjosaj4C"
+				"bzz-raw://88ecc2870e58c1868159b0c10f88028f8d8bb1c443d98e1d33dce57b7e71926a",
+				"dweb:/ipfs/QmNQmq1eNdwjMfhTSx5yXh9xbPG2jrTE5MLuq21ZPGzibF"
+			]
+		},
+		"contracts/IChainlinkPriceFeed.sol": {
+			"keccak256": "0x7afcf9253a5c4a9c70178ec9e90b9f1c601efa72854cd40b55d86a161214f57e",
+			"urls": [
+				"bzz-raw://efebdc27ac35d798ce19aeac154996960f52fdb56b59e37a0d845e5513f253ac",
+				"dweb:/ipfs/QmTkaZAwVrhLgWeP8AuHQzUzskh6FqqBv7UMDjo313RDBJ"
+			]
+		},
+		"contracts/NFTShardERC20.sol": {
+			"keccak256": "0x815ac233bb00df47fa504ce8d6fde3899d7985c45ff942d4761726b7819f1e16",
+			"urls": [
+				"bzz-raw://a7f7c6bc77c3263d54f313cd099f12446d85a5c74e187e20f708e9f0e75f05b0",
+				"dweb:/ipfs/QmauiwQkdp86CSdkDwSy1yVPHvXtF9GchC5qENcafeUPP9"
 			]
 		},
 		"contracts/NFTShardERC721.sol": {
-			"keccak256": "0x38bd63e51cb7df542754483804c60a9650b4ae1170a63bf3320fb20cf5057560",
+			"keccak256": "0xa9ef43eb011f271ed018ea8cd350a05206dd2417c22f227fed699c832308df65",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0771b48ca9bb649055edad919c3ada42a9dbb31a8c2b192b90e9faf073e4d946",
-				"dweb:/ipfs/QmdJJusaMZqTATwfFTqFprjKxea5sgdaxNAsc7tcDTdyru"
+				"bzz-raw://c54f68c02755d5a2047e1229441261e8a290173e7471274ddcaf38a4616a78b5",
+				"dweb:/ipfs/QmTc2ZrdEemFq7E7m7CbiBRy6YjZnxrcAjozwFbVtC2r4u"
 			]
 		},
 		"contracts/NFTShardPool.sol": {
-			"keccak256": "0x6ada48eacd26c97d370d19549f8332e2e2c327852e5703badb8c22fc804baf63",
+			"keccak256": "0x24eff7b379ac235382ce44348bc88eb26aaa2790a638d1bfd537d50a8159ed2f",
 			"urls": [
-				"bzz-raw://1804948ff5357262d4cc62cefcfbcce6656ad595ef18eaa03518c35ceed5e28a",
-				"dweb:/ipfs/QmSCDgfjWwxwCvmHNp8MGPRB4upchHxBGYg645bQFWX87f"
+				"bzz-raw://09d9ed1e742ee80fbd0df8a6f3c6053160a88ac9411a45f57e971be56fa834f0",
+				"dweb:/ipfs/QmP7pARUgag61YtWh3u9A18y65U8NQXYAxMLpEBHLUWtWY"
 			]
 		}
 	},

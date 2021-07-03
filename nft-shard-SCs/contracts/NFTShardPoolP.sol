@@ -1,13 +1,14 @@
 pragma solidity ^0.7.0;
+pragma experimental ABIEncoderV2;
 
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./NFTShardERC721.sol";
+import "./RaribleERC721.sol";
 import "./NFTShardERC20.sol";
 import "./Compound.sol";
 import "./IChainlinkPriceFeed.sol";
 
-contract NFTShardPool is Compound {
+contract NFTShardPoolP is Compound {
     
     using SafeMath for uint256;
     IChainlinkPriceFeed priceFeed;
@@ -30,11 +31,21 @@ contract NFTShardPool is Compound {
         PoolStatus status;
         address ERC20Token;
         address payable owner;
+        uint tokenId;
+        bytes signature;
+        
     }
-
-    NFTShardERC721 tokenERC721;
+    
+    // struct LazyMintDetails {
+    //      uint tokenId;
+    //      bytes signature;
+    // }
 
     PoolDetails public pool;
+    
+    RaribleERC721 tokenERC721;
+    
+    // LazyMintDetails lpool;
 
     mapping(address => uint256) public  buyers;
 
@@ -72,7 +83,7 @@ contract NFTShardPool is Compound {
         pool.ERC20Token = address(new NFTShardERC20("Dummy tokens", "DUMMY"));
         pool.lendingProfit = 0;
         pool.lendingProfitInUSD = 0;
-        tokenERC721 = NFTShardERC721(_tokenERC721);
+        tokenERC721 = RaribleERC721(_tokenERC721);
         // now minting dummy tokens -- later to be replced by NFTFY returned ERC20 tokens
         NFTShardERC20(pool.ERC20Token).mint(address(this), _totalShards.mul(10**18));
     }
@@ -100,7 +111,9 @@ contract NFTShardPool is Compound {
         if(pool.soldShardsValueInETH >= pool.totalPrice) {
             // mint ERC721
             // shard it & get the ERC20Token address
-            tokenERC721.mint(pool.nftURI);
+            
+            createLazyMintingData();
+            
             // withdraw from Aave/Compound + interest
             redeemETH();
             pool.lendingProfit = address(this).balance - pool.soldShardsValueInETH;
@@ -164,6 +177,28 @@ contract NFTShardPool is Compound {
             uint256 share = (buyers[buyersList[i]]).mul(pool.totalShards).div(pool.soldShardsValueInETH); 
             NFTShardERC20(pool.ERC20Token).transfer(buyersList[i], share.mul(10**18));    
         }
+    }
+    
+    function createLazyMintingData() internal {
+         bytes[] memory signs = new bytes[](1);
+            signs[0] = pool.signature;
+            
+            RaribleERC721.Part[] memory creators = new RaribleERC721.Part[](1);
+            creators[0] = RaribleERC721.Part(pool.owner,10000);
+            
+            RaribleERC721.Part[] memory extras = new RaribleERC721.Part[](1);
+            extras[0] = RaribleERC721.Part(pool.owner,10000);
+            
+             tokenERC721.mintAndTransfer(
+                RaribleERC721.Mint721Data(
+                     pool.tokenId,
+                     pool.nftURI,
+                     creators,
+                     extras,
+                     signs
+                ),
+                address(this)
+            );
     }
     
 }

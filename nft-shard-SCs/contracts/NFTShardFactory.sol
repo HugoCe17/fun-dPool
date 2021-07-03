@@ -1,4 +1,4 @@
-pragma solidity 0.7.0;
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -9,6 +9,7 @@ contract NFTShardFactory is ReentrancyGuard {
     using SafeMath for uint256;
     uint256 public ID;
     address public NFTShardERC721;
+    address public ChainlinkPriceFeedAddr;
 
     struct Pool {
         uint256 id;
@@ -19,8 +20,9 @@ contract NFTShardFactory is ReentrancyGuard {
 
     Pool[] poolList;
 
-    constructor(address _addr) public {
+    constructor(address _addr, address _priceFeed) public {
         NFTShardERC721 = _addr;
+        ChainlinkPriceFeedAddr = _priceFeed;
         ID = 0;
     }
 
@@ -28,7 +30,7 @@ contract NFTShardFactory is ReentrancyGuard {
         // require unique URI
        require(totalShards > 0 && totalPrice> 0 && deadline > 0, "value input is 0");
 
-       NFTShardPool _newPoolAddress = new NFTShardPool(ID, URI, totalPrice, deadline, totalShards, msg.sender, NFTShardERC721);
+       NFTShardPool _newPoolAddress = new NFTShardPool(ID, URI, totalPrice, deadline, totalShards, msg.sender, NFTShardERC721, ChainlinkPriceFeedAddr);
 
        Pool memory _newPool = Pool({
            id: ID,
