@@ -35,7 +35,7 @@
           </div>
           <div class="column mt-6 is-full">
             <b-input v-model='contribution' type='number' step="any" placeholder="Contribution in Ξ"></b-input>
-            <b-button @click.native="contribute">Add to Pool</b-button>
+            <b-button :loading="contributionLoading" @click.native="contribute">Add to Pool</b-button>
           </div>
         </div>
       </div>
@@ -88,20 +88,75 @@ export default {
       poolAPY: 4000000,
       balance: 0,
       contribution: null,
+      contributionLoading: false,
       poolDetails: {
         backers: 0,
       },
     }
   },
   async mounted() {
+    if (this.$web3Modal.cachedProvider) {
+      await this.$store.dispatch('connectToWallet')
+    }
     this.fundPool = await new this.$web3.eth.Contract(
       fundPoolABI.abi,
       this.address
     )
+    this.getData()
+  },
+  methods: {
+    truncateAddress(address) {
+      if (address.length > 0) {
+        return (
+          address.substring(0, 4) +
+          '....' +
+          address.substring(address.length - 5, address.length)
+        )
+      } else {
+        return address
+      }
+    },
+    contribute() {
+      this.contributionLoading = true
+      this.fundPool.methods
+        .buyShards()
+        .send({
+          from: this.selectedAccount,
+          value: this.$web3.utils.toWei(this.contribution),
+        })
+        .then((res) => {
+          console.log(res)
+          this.contribution = ''
+          this.contributionLoading = false
+                    this.$buefy.toast.open({
+            duration: 5000,
+            message: `Your contribution has been made!`,
+            position: 'is-top',
+            type: 'is-success',
+          })
+          this.getData()
+        })
+        .catch((err) => {
+          console.log(err)
+          this.contribution = ''
+          this.contributionLoading = false
+        })
+    },
+    close() {
+      this.fundPool.methods
+        .closePool()
+        .send({ from: this.selectedAccount })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    async getData() {
     this.balance = this.$web3.utils.fromWei(
       await this.$web3.eth.getBalance(this.address)
     )
-
     await this.fundPool.methods
       .pool()
       .call()
@@ -140,44 +195,6 @@ export default {
       .then((result) => {
         this.poolDetails.backers = result
       })
-  },
-  methods: {
-    truncateAddress(address) {
-      if (address.length > 0) {
-        return (
-          address.substring(0, 4) +
-          '....' +
-          address.substring(address.length - 5, address.length)
-        )
-      } else {
-        return address
-      }
-    },
-    contribute() {
-      this.fundPool.methods
-        .buyShards()
-        .send({
-          from: this.selectedAccount,
-          value: this.$web3.utils.toWei(this.contribution),
-        })
-        .then((res) => {
-          console.log(res)
-          this.contribution = ''
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    close() {
-      this.fundPool.methods
-        .closePool()
-        .send({ from: this.selectedAccount })
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     async mintAndShard() {
       var timestamp = await this.$web3.eth.getBlock('latest')

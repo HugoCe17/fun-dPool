@@ -61,8 +61,9 @@
         icon="account-plus"
       >
         <h1>Launch your NFT raise</h1>
-        <b-button @click.native="launchPool">Launch fun-DPool</b-button>
-        <b-button @click.native="getPools">View fun-DPool</b-button>
+        <b-button :loading="createPoolLoading" @click.native="launchPool"
+          >Launch fun-DPool</b-button
+        >
       </b-step-item>
     </b-steps>
   </section>
@@ -83,8 +84,9 @@ export default {
       newPoolName: '',
       newPoolDesc: '',
       newPoolFile: {},
-      newPoolGoal: 100,
+      newPoolGoal: 1,
       newPoolSpan: 0,
+      createPoolLoading: false,
     }
   },
   computed: {
@@ -102,6 +104,7 @@ export default {
       console.log(this.fundPool)
     },
     async launchPool() {
+      this.createPoolLoading = true
       const {
         newPoolName,
         newPoolDesc,
@@ -151,16 +154,28 @@ export default {
       this.fundPool.methods
         .createPool(
           metadata.url,
-          this.$web3.utils.toWei(this.newPoolGoal),
-          100,
-          this.newPoolSpan * 86400
+          String(this.$web3.utils.toWei(this.newPoolGoal)),
+          String(100),
+          String(this.newPoolSpan * 86400)
         )
         .send({ from: this.selectedAccount })
         .then((result) => {
           console.log(result)
+          this.createPoolLoading = false
+          this.$buefy.toast.open({
+            duration: 5000,
+            message: `Your funDpool has been created!`,
+            position: 'is-top',
+            type: 'is-success',
+          })
+          let addy = result.events['0'].raw.topics[2]
+          let parsedAddy =
+            addy.substring(0, 2) + addy.substring(26, addy.length)
+          this.$router.push('/pool/' + parsedAddy)
         })
         .catch((err) => {
           console.log(err)
+          this.createPoolLoading = false
         })
     },
     getPools() {
