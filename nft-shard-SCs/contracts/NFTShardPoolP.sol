@@ -16,14 +16,11 @@ contract NFTShardPoolP is Compound {
     enum PoolStatus {active, claim, inactive}
 
     struct PoolDetails {
-        string nftURI;
-        // uint256 id;
         uint256 totalPrice;
         uint256 totalPriceInUSD;
         uint256 deadline;
         uint256 totalShards;
         uint256 startTime;
-        // uint256 pricePerShard;
         uint256 soldShardsValueInETH;
         uint256 soldShardsValueInUSD;
         uint256 lendingProfit;
@@ -31,25 +28,23 @@ contract NFTShardPoolP is Compound {
         PoolStatus status;
         address ERC20Token;
         address payable owner;
-        uint tokenId;
-        bytes signature;
-        
     }
     
-    // struct LazyMintDetails {
-    //      uint tokenId;
-    //      bytes signature;
-    // }
+    struct LazyMintingDetails {
+        string nftURI;
+        uint256 tokenId;
+    }
+
+    RaribleERC721 tokenERC721;
 
     PoolDetails public pool;
-    
-    RaribleERC721 tokenERC721;
-    
-    // LazyMintDetails lpool;
+    LazyMintingDetails lpool;
 
     mapping(address => uint256) public  buyers;
 
     address[] public buyersList;
+    
+    string public PoolName;
 
     modifier onlyOwner() {
         require(msg.sender == pool.owner, "Pool owner can only do this");
@@ -57,7 +52,8 @@ contract NFTShardPoolP is Compound {
     }
 
     constructor(
-        uint256 _id, 
+        uint256 _id,
+        string memory _name,
         string memory _uri, 
         uint256 _totalPrice, 
         uint256 _deadline, 
@@ -68,24 +64,29 @@ contract NFTShardPoolP is Compound {
         ) Compound() public 
     {
         priceFeed = IChainlinkPriceFeed(_priceFeed);
-        // pool.id = _id;
-        pool.nftURI = _uri;
+        PoolName = _name;
         pool.totalPrice = _totalPrice;
         pool.totalPriceInUSD = _totalPrice.mul(priceFeed.getThePrice()).div(10**8);
         pool.deadline = _deadline;
         pool.totalShards = _totalShards;
         pool.startTime = block.timestamp;
-        // pool.pricePerShard = (_totalPrice.div(_totalShards));
         pool.soldShardsValueInETH = 0;
         pool.soldShardsValueInUSD = 0;
         pool.status = PoolStatus.active;
         pool.owner = _owner;
-        pool.ERC20Token = address(new NFTShardERC20("Dummy tokens", "DUMMY"));
+        pool.ERC20Token = address(new NFTShardERC20("Pool tokens", _name));
         pool.lendingProfit = 0;
         pool.lendingProfitInUSD = 0;
         tokenERC721 = RaribleERC721(_tokenERC721);
         // now minting dummy tokens -- later to be replced by NFTFY returned ERC20 tokens
         NFTShardERC20(pool.ERC20Token).mint(address(this), _totalShards.mul(10**18));
+        
+        lpool.tokenId = 0;
+        lpool.nftURI = _uri;
+    }
+    
+    function setTokenId(uint256 _id) public {
+        lpool.tokenId = _id;
     }
 
     function buyShards() public payable returns(uint) {
@@ -104,16 +105,14 @@ contract NFTShardPoolP is Compound {
         return msg.value;
     }
 
-    function mintNFTandShard() public onlyOwner returns(address){
+    function mintNFTandShard() public onlyOwner returns(address) {
         require(block.timestamp >= pool.startTime.add(pool.deadline), "Deadline not over" );
         require(pool.status == PoolStatus.active, "Pool must be active");
 
         if(pool.soldShardsValueInETH >= pool.totalPrice) {
             // mint ERC721
             // shard it & get the ERC20Token address
-            
-            createLazyMintingData();
-            
+             mintAndTransfer();
             // withdraw from Aave/Compound + interest
             redeemETH();
             pool.lendingProfit = address(this).balance - pool.soldShardsValueInETH;
@@ -146,14 +145,6 @@ contract NFTShardPoolP is Compound {
         buyers[msg.sender] = 0;
     }
 
-    // function claimShards() public {
-    //     require(block.timestamp >= pool.startTime.add(pool.deadline), "Deadline not over");
-    //     require(pool.status == PoolStatus.claim, "Pool must be claim");
-    //     require(buyers[msg.sender] > 0, "No shards bought");
-    //     require(pool.ERC20Token != address(0), "NFT not been sharded yet");
-    //     NFTShardERC20(pool.ERC20Token).transfer(msg.sender, buyers[msg.sender].mul(10**18));        
-    // }
-
     function closePool() public onlyOwner returns(bool) {
         // some logic
         return true;
@@ -179,26 +170,38 @@ contract NFTShardPoolP is Compound {
         }
     }
     
-    function createLazyMintingData() internal {
-         bytes[] memory signs = new bytes[](1);
-            signs[0] = pool.signature;
+     function mintAndTransfer() internal {
+            
+            // bytes memory tid = toBytes(address(this));
+            // bytes memory tid2 = toBytes(1);
+            
+            bytes[] memory signs = new bytes[](1);
+            signs[0] = "0x";
             
             RaribleERC721.Part[] memory creators = new RaribleERC721.Part[](1);
-            creators[0] = RaribleERC721.Part(pool.owner,10000);
+            creators[0] = RaribleERC721.Part(address(this),10000);
             
             RaribleERC721.Part[] memory extras = new RaribleERC721.Part[](1);
-            extras[0] = RaribleERC721.Part(pool.owner,10000);
+            extras[0] = RaribleERC721.Part(address(this),10000);
             
-             tokenERC721.mintAndTransfer(
+            tokenERC721.mintAndTransfer(
                 RaribleERC721.Mint721Data(
-                     pool.tokenId,
-                     pool.nftURI,
+                     lpool.tokenId,
+                     lpool.nftURI,
                      creators,
                      extras,
                      signs
-                ),
+            ),
                 address(this)
             );
     }
+    
+    // function toBytes(address a) public pure returns (bytes memory) {
+    //     return abi.encodePacked(a);
+    // } 
+    
+    //  function toBytes(uint256 a) public pure returns (bytes memory) {
+    //     return abi.encodePacked(a);
+    // } 
     
 }
