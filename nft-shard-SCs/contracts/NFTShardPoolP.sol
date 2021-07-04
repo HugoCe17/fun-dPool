@@ -16,15 +16,16 @@ contract NFTShardPoolP is Compound {
     enum PoolStatus {active, claim, inactive}
 
     struct PoolDetails {
+        string nftURI;
+        uint256 deadline;
         uint256 totalPrice;
         uint256 totalPriceInUSD;
-        uint256 deadline;
         uint256 totalShards;
         uint256 startTime;
         uint256 soldShardsValueInETH;
         uint256 soldShardsValueInUSD;
         uint256 lendingProfit;
-        uint256 lendingProfitInUSD;
+        // uint256 lendingProfitInUSD;
         PoolStatus status;
         address ERC20Token;
         address payable owner;
@@ -76,13 +77,14 @@ contract NFTShardPoolP is Compound {
         pool.owner = _owner;
         pool.ERC20Token = address(new NFTShardERC20("Pool tokens", _name));
         pool.lendingProfit = 0;
-        pool.lendingProfitInUSD = 0;
+        // pool.lendingProfitInUSD = 0;
         tokenERC721 = RaribleERC721(_tokenERC721);
         // now minting dummy tokens -- later to be replced by NFTFY returned ERC20 tokens
         NFTShardERC20(pool.ERC20Token).mint(address(this), _totalShards.mul(10**18));
         
         lpool.tokenId = 0;
         lpool.nftURI = _uri;
+        pool.nftURI = _uri;
     }
     
     function setTokenId(uint256 _id) public {
@@ -116,7 +118,7 @@ contract NFTShardPoolP is Compound {
             // withdraw from Aave/Compound + interest
             redeemETH();
             pool.lendingProfit = address(this).balance - pool.soldShardsValueInETH;
-            pool.lendingProfitInUSD =  pool.lendingProfit.mul(priceFeed.getThePrice()).div(10**8);
+            // pool.lendingProfitInUSD =  pool.lendingProfit.mul(priceFeed.getThePrice()).div(10**8);
             // set status as claim
             pool.status = PoolStatus.claim;
             // tranfer the shards to buyers
@@ -130,7 +132,7 @@ contract NFTShardPoolP is Compound {
         // set status as inactive
         redeemETH();
         pool.lendingProfit = address(this).balance - pool.soldShardsValueInETH;
-        pool.lendingProfitInUSD =  pool.lendingProfit.mul(priceFeed.getThePrice()).div(10**8);
+        // pool.lendingProfitInUSD =  pool.lendingProfit.mul(priceFeed.getThePrice()).div(10**8);
         pool.status = PoolStatus.inactive;
         return address(0);
     }

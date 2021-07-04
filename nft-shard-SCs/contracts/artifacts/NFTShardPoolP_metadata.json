@@ -164,6 +164,16 @@
 				"name": "pool",
 				"outputs": [
 					{
+						"internalType": "string",
+						"name": "nftURI",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deadline",
+						"type": "uint256"
+					},
+					{
 						"internalType": "uint256",
 						"name": "totalPrice",
 						"type": "uint256"
@@ -171,11 +181,6 @@
 					{
 						"internalType": "uint256",
 						"name": "totalPriceInUSD",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "deadline",
 						"type": "uint256"
 					},
 					{
@@ -201,11 +206,6 @@
 					{
 						"internalType": "uint256",
 						"name": "lendingProfit",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "lendingProfitInUSD",
 						"type": "uint256"
 					},
 					{
@@ -273,7 +273,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -333,10 +333,10 @@
 			]
 		},
 		"contracts/NFTShardPoolP.sol": {
-			"keccak256": "0xd0ae67d039f294fa1ec4c77b8b449a19131f81eb01e04396aad6e77094876b21",
+			"keccak256": "0xbe8eccff836e4cb5540d267cd81f8284d7390bda23bfec8f03ee93ddce463c22",
 			"urls": [
-				"bzz-raw://66aac68a5d4ed160fdc99c1ed880f3c905ed2d0f191b781b34b943ffe6ba648e",
-				"dweb:/ipfs/QmcLpx4DUor54f2gy7RnDQgNDAKJJZtsErqP4kR8xiRHTt"
+				"bzz-raw://d64ef339e2d620c42dab063e4c12495cbfbe91e5da9d37d0ed74172af66d442d",
+				"dweb:/ipfs/QmTrAeyYVrbP4vxvcdNHRe9sp6jfDhsGPhFCLSZBReqnUy"
 			]
 		},
 		"contracts/RaribleERC721.sol": {
