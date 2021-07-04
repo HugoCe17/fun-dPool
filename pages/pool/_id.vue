@@ -40,6 +40,9 @@
             <b-input v-model='contribution' type='number' step="any" placeholder="Contribution in Ξ"></b-input>
             <b-button :loading="contributionLoading" @click.native="contribute">Add to Pool</b-button>
           </div>
+          <div class="column is-full">
+            <h1>You've added Ξ{{ poolDetails.poolInvestment }} to this pool</h1>
+          </div>
           <div v-if='poolDetails.status == "Closed"' class="column mt-6 is-full">
             <h2 class="">Pool Closed</h2>
           </div>
@@ -61,7 +64,20 @@
         <div class="column auto px-3 my-3"> 
           <h1>Owner Settings</h1>    
             <b-button @click.native="mintAndShard">Mint and Shard</b-button>
-            <b-button @click.native="close">Close</b-button>     
+            <!-- <b-button @click.native="close">Close</b-button>      -->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="columns">
+        <div class="column auto px-3 my-3"> 
+          <h1>Fractional Token Address: {{poolDetails.ERC20Token}}</h1>    
+          <b-table
+            :data="erc20Events"
+            :default-sort="['ownership', 'desc']"
+            :columns="columns"
+            default-sort-direction="desc"
+          />
         </div>
       </div>
     </div>
@@ -70,6 +86,8 @@
 
 <script>
 import fundPoolABI from '~/contracts/ABI/NFTShardPool.json'
+import fractionalTokenABI from '~/contracts/ABI/NFTShardERC20.json'
+
 import { KOVAN_NFTSHARDFACTORY } from '~/constants'
 import { mapState } from 'vuex'
 import FlipCountdown from 'vue2-flip-countdown'
@@ -101,6 +119,18 @@ export default {
       latestBlock: {},
       events: [],
       contributionLoading: false,
+      erc20Events: [],
+      columns: [
+                    {
+                        field: 'contributor',
+                        label: 'Contributor',
+                    },
+                                        {
+                        field: 'ownership',
+                        label: 'Ownership',
+                        numeric: true
+                    }
+                ],
       poolDetails: {
         backers: 0,
         valueInEth: 0,
@@ -116,6 +146,7 @@ export default {
       fundPoolABI.abi,
       this.address
     )
+
     this.getData()
     setInterval(() => {
       this.poolDetails.valueInEth = (
@@ -263,7 +294,7 @@ export default {
         .buyers(this.selectedAccount)
         .call()
         .then((result) => {
-          this.poolDetails.poolInvestment = result
+          this.poolDetails.poolInvestment = Number(this.$web3.utils.fromWei(result)).toFixed(8)
         })
 
       await this.fundPool.methods
@@ -281,6 +312,38 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+
+    this.fractionalToken = await new this.$web3.eth.Contract(
+      fractionalTokenABI.abi,
+      this.poolDetails.ERC20Token
+    )
+    console.log(this.fractionalToken)
+    this.erc20Events = [];
+      await this.fractionalToken
+      .getPastEvents(
+          'Transfer',
+          {
+            filter: {
+            }, // Using an array means OR: e.g. 20 or 23
+            fromBlock: 0,
+            toBlock: 'latest',
+          },
+          function (error, events) {
+            return events
+
+          })
+        .then( (events) => {
+          console.log("Events", events)
+            events.map((tx) => {
+              this.erc20Events.push({
+                contributor: tx.returnValues.to == this.address ? "Pool Creation" : tx.returnValues.to ,
+                ownership: this.$web3.utils.fromWei(tx.returnValues.value)
+              })
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     async mintAndShard() {
       var timestamp = await this.$web3.eth.getBlock('latest')
@@ -290,6 +353,7 @@ export default {
         .send({ from: this.selectedAccount })
         .then((res) => {
           console.log(res)
+          this.getData()
         })
         .catch((err) => {
           console.log(err)

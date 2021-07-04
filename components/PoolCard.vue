@@ -25,8 +25,10 @@
         <br />
       </div>
 
-      <footer class="card-footer">
-        <b-button tag="nuxt-link" :to="'pool/' + address">View</b-button>
+      <footer class="card-footer p-2">
+        <b-button class="ma-3" tag="nuxt-link" :to="'pool/' + address"
+          >View</b-button
+        >
       </footer>
     </div>
   </div>
