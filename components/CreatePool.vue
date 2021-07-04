@@ -72,8 +72,11 @@
 <script>
 import { mapState } from 'vuex'
 
-import fundPoolABI from '~/contracts/ABI/NFTShardFactory.json'
+import fundPoolABI from '~/contracts/ABI/NFTShardFactory2.json'
 import { KOVAN_NFTSHARDFACTORY } from '~/constants'
+
+import singleFundPoolABI from '~/contracts/ABI/NFTShardPoolP.json'
+
 
 export default {
   data() {
@@ -97,6 +100,7 @@ export default {
       fundPoolABI.abi,
       KOVAN_NFTSHARDFACTORY
     )
+    console.log("Contract",this.fundPool)
   },
   methods: {
     startProject() {
@@ -139,7 +143,7 @@ export default {
           description: formData.newPoolDesc,
           image: formData.newPoolFile,
         })
-        console.log(metadata)
+        console.log("METADATA",metadata)
         this.createPool(metadata)
       } else {
         this.$buefy.toast.open({
@@ -150,18 +154,18 @@ export default {
         })
       }
     },
-    createPool(metadata) {
-      this.fundPool.methods
+    async createPool(metadata) {
+      await this.fundPool.methods
         .createPool(
+          this.newPoolName,
           metadata.url,
           String(this.$web3.utils.toWei(this.newPoolGoal)),
           String(100),
-          String(this.newPoolSpan * 86400)
+          String((this.newPoolSpan * 86400).toFixed(0))
         )
         .send({ from: this.selectedAccount })
-        .then((result) => {
+        .then(async (result) => {
           console.log(result)
-          this.createPoolLoading = false
           this.$buefy.toast.open({
             duration: 5000,
             message: `Your funDpool has been created!`,
@@ -171,6 +175,21 @@ export default {
           let addy = result.events['0'].raw.topics[2]
           let parsedAddy =
             addy.substring(0, 2) + addy.substring(26, addy.length)
+          this.singleFundPool = await new this.$web3.eth.Contract(
+            singleFundPoolABI.abi,
+            parsedAddy
+          )
+          await this.$axios.get("https://api-staging.rarible.com/protocol/v0.1/ethereum/nft/collections/0x6ede7f3c26975aad32a475e1021d8f6f39c89d82/generate_token_id?minter=" + parsedAddy)
+          .then(async (result) => {
+            await this.singleFundPool.methods.setTokenId(result.data.tokenId)
+            .send({ from: this.selectedAccount })
+            .then((result) => {
+              console.log(result)
+              this.createPoolLoading = false
+
+            })
+
+          })
           this.$router.push('/pool/' + parsedAddy)
         })
         .catch((err) => {

@@ -24,16 +24,22 @@
               format="percent"
             ></b-progress>
           </div>
-          <div class="column is-full">
-            <h1><strong>Ξ{{ poolDetails.valueInEth }}</strong> $({{Number(poolDetails.valueInUsd).toFixed(2)}}) pooled of <strong>Ξ{{ poolDetails.totalPrice }}</strong> $({{Number(poolDetails.totalPriceInUsd).toFixed(2)}}) goal</h1>
+          <div class="column pb-0 is-full">
+            <h1 class="has-text-weight-light is-size-3"><strong>Ξ{{ poolDetails.valueInEth }}</strong> $({{Number(poolDetails.valueInUsd).toFixed(2)}})</h1>
           </div>
-          <div class="column is-full">
-            <h1>{{ poolDetails.backers }} backers</h1>
+          <div class="column pt-0 is-full">
+            <h1> pooled of <strong>Ξ{{ poolDetails.totalPrice }}</strong> $({{Number(poolDetails.totalPriceInUsd).toFixed(2)}}) goal</h1>
+          </div>
+          <div class="column is-full pb-0">
+            <h1 class="is-size-3"><strong>{{ poolDetails.backers }}</strong></h1>
+          </div>
+          <div class="column is-full pt-0">
+            <h1>Contributors</h1>
           </div>
           <div v-if='poolDetails.status != "Closed"' class="column is-full">
             <!-- <h1>{{ poolDetails.deadline }} days to go</h1> -->
             <div v-if="clockDeadline() != null">
-              <flip-countdown :deadline="clockDeadline()"></flip-countdown>
+              <flip-countdown :deadline="clockDeadline()" @timeElapsed="getData"></flip-countdown>
             </div>
           </div>
           <div v-if='poolDetails.status != "Closed"' class="column mt-6 is-full">
@@ -41,10 +47,10 @@
             <b-button :loading="contributionLoading" @click.native="contribute">Add to Pool</b-button>
           </div>
           <div class="column is-full">
-            <h1>You've added Ξ{{ poolDetails.poolInvestment }} to this pool</h1>
+            <h1 class="has-text-weight-light">You've added Ξ{{ poolDetails.poolInvestment }} to this pool</h1>
           </div>
           <div v-if='poolDetails.status == "Closed"' class="column mt-6 is-full">
-            <h2 class="">Pool Closed</h2>
+            <h2 class="has-text-weight-bold is-size-2">Pool Closed</h2>
           </div>
         </div>
       </div>
@@ -59,16 +65,9 @@
         </div>
       </div>
     </div>
+    <br>
     <div class="container">
-      <div class="columns">
-        <div class="column auto px-3 my-3"> 
-          <h1>Owner Settings</h1>    
-            <b-button @click.native="mintAndShard">Mint and Shard</b-button>
-            <!-- <b-button @click.native="close">Close</b-button>      -->
-        </div>
-      </div>
-    </div>
-    <div class="container">
+      <h1 class="is-size-1">Shards Details</h1>
       <div class="columns">
         <div class="column auto px-3 my-3"> 
           <h1>Fractional Token Address: {{poolDetails.ERC20Token}}</h1>    
@@ -81,11 +80,20 @@
         </div>
       </div>
     </div>
+    <div class="container">
+      <div class="columns">
+        <div class="column auto px-3 my-3"> 
+          <h1>Owner Settings</h1>    
+            <b-button :loading="mintingLoading" @click.native="mintAndShard">Mint and Shard</b-button>
+            <!-- <b-button @click.native="close">Close</b-button>      -->
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import fundPoolABI from '~/contracts/ABI/NFTShardPool.json'
+import fundPoolABI from '~/contracts/ABI/NFTShardPoolP.json'
 import fractionalTokenABI from '~/contracts/ABI/NFTShardERC20.json'
 
 import { KOVAN_NFTSHARDFACTORY } from '~/constants'
@@ -119,18 +127,19 @@ export default {
       latestBlock: {},
       events: [],
       contributionLoading: false,
+      mintingLoading: false,
       erc20Events: [],
       columns: [
-                    {
-                        field: 'contributor',
-                        label: 'Contributor',
-                    },
-                                        {
-                        field: 'ownership',
-                        label: 'Ownership',
-                        numeric: true
-                    }
-                ],
+        {
+          field: 'contributor',
+          label: 'Contributor',
+        },
+        {
+          field: 'ownership',
+          label: 'Ownership',
+          numeric: true,
+        },
+      ],
       poolDetails: {
         backers: 0,
         valueInEth: 0,
@@ -146,25 +155,28 @@ export default {
       fundPoolABI.abi,
       this.address
     )
+    console.log('contract', this.fundPool)
 
     this.getData()
     setInterval(() => {
-      this.poolDetails.valueInEth = (
-        Number(this.poolDetails.valueInEth) +
-        (Number(this.poolDetails.valueInEth) * (Number(this.poolAPY) / 100)) /
-          365 /
-          24 /
-          60 /
-          60
-      ).toFixed(4)
-      this.poolDetails.valueInUsd = (
-        Number(this.poolDetails.valueInUsd) +
-        (Number(this.poolDetails.valueInUsd) * (Number(this.poolAPY) / 100)) /
-          365 /
-          24 /
-          60 /
-          60
-      ).toFixed(2)
+      if (this.poolDetails.status != 'Closed') {
+        this.poolDetails.valueInEth = (
+          Number(this.poolDetails.valueInEth) +
+          (Number(this.poolDetails.valueInEth) * (Number(this.poolAPY) / 100)) /
+            365 /
+            24 /
+            60 /
+            60
+        ).toFixed(4)
+        this.poolDetails.valueInUsd = (
+          Number(this.poolDetails.valueInUsd) +
+          (Number(this.poolDetails.valueInUsd) * (Number(this.poolAPY) / 100)) /
+            365 /
+            24 /
+            60 /
+            60
+        ).toFixed(2)
+      }
     }, 1000)
   },
   methods: {
@@ -294,7 +306,9 @@ export default {
         .buyers(this.selectedAccount)
         .call()
         .then((result) => {
-          this.poolDetails.poolInvestment = Number(this.$web3.utils.fromWei(result)).toFixed(8)
+          this.poolDetails.poolInvestment = Number(
+            this.$web3.utils.fromWei(result)
+          ).toFixed(8)
         })
 
       await this.fundPool.methods
@@ -313,39 +327,42 @@ export default {
           console.log(error)
         })
 
-    this.fractionalToken = await new this.$web3.eth.Contract(
-      fractionalTokenABI.abi,
-      this.poolDetails.ERC20Token
-    )
-    console.log(this.fractionalToken)
-    this.erc20Events = [];
+      this.fractionalToken = await new this.$web3.eth.Contract(
+        fractionalTokenABI.abi,
+        this.poolDetails.ERC20Token
+      )
+      console.log(this.fractionalToken)
+      this.erc20Events = []
       await this.fractionalToken
-      .getPastEvents(
+        .getPastEvents(
           'Transfer',
           {
-            filter: {
-            }, // Using an array means OR: e.g. 20 or 23
+            filter: {}, // Using an array means OR: e.g. 20 or 23
             fromBlock: 0,
             toBlock: 'latest',
           },
           function (error, events) {
             return events
-
-          })
-        .then( (events) => {
-          console.log("Events", events)
-            events.map((tx) => {
-              this.erc20Events.push({
-                contributor: tx.returnValues.to == this.address ? "Pool Creation" : tx.returnValues.to ,
-                ownership: this.$web3.utils.fromWei(tx.returnValues.value)
-              })
+          }
+        )
+        .then((events) => {
+          console.log('Events', events)
+          events.map((tx) => {
+            this.erc20Events.push({
+              contributor:
+                tx.returnValues.to == this.address
+                  ? 'Pool Creation'
+                  : tx.returnValues.to,
+              ownership: this.$web3.utils.fromWei(tx.returnValues.value),
             })
+          })
         })
         .catch((err) => {
           console.log(err)
         })
     },
     async mintAndShard() {
+      this.mintingLoading = true;
       var timestamp = await this.$web3.eth.getBlock('latest')
       console.log(timestamp)
       this.fundPool.methods
@@ -354,9 +371,14 @@ export default {
         .then((res) => {
           console.log(res)
           this.getData()
+          this.mintingLoading = false;
+          this.getData()
+
         })
         .catch((err) => {
           console.log(err)
+          this.mintingLoading = false;
+          this.getData()
         })
     },
   },
@@ -370,5 +392,14 @@ export default {
 }
 .poolHeading {
   text-align: center;
+}
+.image {
+  max-height: 500px;
+}
+.pb-0 {
+  padding-bottom: 0;
+}
+.pt-0 {
+  padding-top: 0;
 }
 </style>
